@@ -6,7 +6,8 @@
  */
 import static java.lang.Math.PI;
 
-public class CommandAgrs {
+
+public class CommandAgrs  {
 
 
     static int PI=10;
@@ -29,8 +30,11 @@ public class CommandAgrs {
 
         ii=ii>>5;
 
+        Object a;
         System.out.println(Integer.toBinaryString(ii));
         System.out.println(PI);
+
+
 
         int x=5;
         switch (x) {
@@ -44,7 +48,52 @@ public class CommandAgrs {
                 System.out.println("7");
         }
 
+        foo(new int[]{1,2,3});
+    }
 
 
+
+    static void foo(Object ...args)
+    {
+        System.out.println("foo");
+    }
+    static void foo(int ...args)
+    {
+        System.out.println("foo_1");
+    }
+
+
+    //static void foo(int a)
+    //{
+      //  System.out.println("foo 1");
+    //}
+//    static void foo(int a, int b)
+//    {
+//        System.out.println("foo 2");
+//    }
+}
+
+abstract class A
+{
+
+    int a=10;
+}
+
+class B extends A
+{
+
+
+    int a=13;
+
+
+    public A bar()
+    {
+        return this;
+
+    }
+
+    public static void main(String[] args) {
+        A a=new B().bar();
+        System.out.println(a.a);
     }
 }

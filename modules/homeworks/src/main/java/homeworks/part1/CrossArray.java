@@ -1,9 +1,6 @@
 package homeworks.part1;
 
-
-
 import java.util.Random;
-
 
 public class CrossArray {
 
@@ -14,7 +11,7 @@ public class CrossArray {
 
         System.out.println(getArrayAsString(testingArray));
 
-        fillArrayCrossed(testingArray,"-");
+        fillArrayCrossed(testingArray,"+");
 
         System.out.println(getArrayAsString(testingArray));
 
