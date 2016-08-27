@@ -2,7 +2,7 @@ package homeworks.part1;
 
 import java.util.Random;
 
-public class CrossArray {
+public class Ex5 {
 
     public static void main(String[] args) {
 
