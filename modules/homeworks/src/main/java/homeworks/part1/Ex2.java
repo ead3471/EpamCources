@@ -38,6 +38,6 @@ public class Ex2 {
 
     private boolean testFoundedIndex(double[] targetArray,double eps,int foundedIndex)
     {
-
+            return foundedIndex>0?targetArray[foundedIndex]<eps&&targetArray[foundedIndex-1]>=0:targetArray[1]<eps;
     }
 }
