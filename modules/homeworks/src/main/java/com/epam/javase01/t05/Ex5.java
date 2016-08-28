@@ -1,4 +1,4 @@
-package com.epam.javase01;
+package com.epam.javase01.t05;
 
 import java.util.Random;
 

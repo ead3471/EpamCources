@@ -28,4 +28,38 @@ public class CommonUtils {
             return defaultValue;
         }
     }
+
+    public static double tryGetDoubleFromStringArgs(int argumentIndex,double defaultValue,String... arguments)
+    {
+        if (arguments.length-1<argumentIndex)
+            return defaultValue;
+
+        try {
+            return Double.parseDouble(arguments[argumentIndex]);
+        }
+        catch(NumberFormatException ex)
+        {
+            System.out.println("Bad argument format:"+arguments[argumentIndex]);
+            return defaultValue;
+        }
+    }
+
+    public static int tryGetIntFromStringArgs(int argumentIndex,int defaultValue,String... arguments)
+    {
+        if (arguments.length-1<argumentIndex)
+            return defaultValue;
+
+        try {
+            return Integer.parseInt(arguments[argumentIndex]);
+        }
+        catch(NumberFormatException ex)
+        {
+            System.out.println("Bad argument format:"+arguments[argumentIndex]);
+            return defaultValue;
+        }
+
+    }
+
+
+
 }
