@@ -1,4 +1,4 @@
-package homeworks.part1;
+package com.epam.javase01;
 
 import java.util.Arrays;
 
@@ -59,6 +59,7 @@ public class Ex6 {
  *
  *
  */
+
 class Notebook {
     private String ownerName;
     private int noteBookMaxCapacity;

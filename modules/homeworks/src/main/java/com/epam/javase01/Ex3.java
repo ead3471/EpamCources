@@ -1,4 +1,4 @@
-package homeworks.part1;
+package com.epam.javase01;
 
 /**
  * Created by Freemind on 2016-08-27.

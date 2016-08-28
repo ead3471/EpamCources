@@ -1,4 +1,4 @@
-package homeworks.part1;
+package com.epam.javase01;
 
 import java.util.Random;
 

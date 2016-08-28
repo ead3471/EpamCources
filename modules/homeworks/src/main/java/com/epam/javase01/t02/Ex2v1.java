@@ -1,7 +1,11 @@
-package homeworks.part1;
+package com.epam.javase01.t02;
+
+import com.epam.javase01.CommonUtils;
 
 /**
- * Created by Freemind on 2016-08-27.
+ *Найти наименьший номер элемента последовательности, для которого выполняется условие M. Вывести на экран этот номер и все элементы ai  где i = 1, 2, ..., n.
+ *ai=1/(1+n)^2
+ * M: an<eps
  */
 public class Ex2v1 {
 
@@ -9,7 +13,7 @@ public class Ex2v1 {
         double eps=0.001;
 
         if(args.length>0)
-            eps=CommonUtils.tryGetDoubleFromString(args[0],0.01);
+            eps= CommonUtils.tryGetDoubleFromString(args[0],0.01);
 
         int sequenceIndex=1;
         double sequenceElement=getSequenceElement(sequenceIndex);
