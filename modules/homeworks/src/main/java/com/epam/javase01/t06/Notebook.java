@@ -12,10 +12,10 @@ class Notebook {
     private int noteBookMaxCapacity;
     private Note[] notes;
 
-    private int lastNoteIndex =0;
+    private int lastNoteIndex =-1;
 
     private static final int DEFAULT_NOTEBOOK_CAPACITY=15;
-    private static final int DEFAULT_STATRING_CAPACITY=10;
+    private static final int DEFAULT_STARTING_CAPACITY =10;
 
 
     /**
@@ -28,13 +28,13 @@ class Notebook {
     {
         this.ownerName=ownerName;
         this.noteBookMaxCapacity=noteBookMaxCapacity;
-        if(noteBookMaxCapacity<DEFAULT_STATRING_CAPACITY)
+        if(noteBookMaxCapacity< DEFAULT_STARTING_CAPACITY)
         {
             notes=new Note[noteBookMaxCapacity];
         }
         else
         {
-            notes=new Note[DEFAULT_STATRING_CAPACITY];
+            notes=new Note[DEFAULT_STARTING_CAPACITY];
         }
 
     }
@@ -64,7 +64,7 @@ class Notebook {
     public void addNote(Note newNote) throws NotebookIsFullException
     {
         if (lastNoteIndex <notes.length)
-            notes[lastNoteIndex++]=newNote;
+            notes[++lastNoteIndex]=newNote;
         else
             throw new NotebookIsFullException("Notebook is full");
         resizeNotes();
@@ -72,18 +72,25 @@ class Notebook {
 
     /**
      *Remove all Note from notebook with specified title
-     * @return true if note with specified title is found and removed and false otherwise
+     * @return true if at least ont note with specified title is found and removed and false otherwise
      */
     public boolean removeNoteByTitle(String noteTitle)
     {
-        boolean isOnedeleted=false;
-        for(int i = 0; i<lastNoteIndex; i++) {
+        boolean isOneDeleted=false;
+        for(int i = 0; i<=lastNoteIndex; i++) {
             if (notes[i].getNoteTitle().equals(noteTitle)) {
                 shiftNotesToLeft(i);
-                isOnedeleted=true;
+                isOneDeleted=true;
             }
         }
-        return isOnedeleted;
+        return isOneDeleted;
+    }
+
+    /**Removes Note at the specified position
+       */
+    public void removeNoteByIndex(int noteIndex)
+    {
+     shiftNotesToLeft(noteIndex);
     }
 
 
@@ -92,14 +99,13 @@ class Notebook {
      */
     public void printNotes()
     {
-        System.out.println("=============Notebook start===============");
-        for(int i=0;i<lastNoteIndex;i++)
+        System.out.println("=============Notebook content start===============");
+        for(int i=0;i<=lastNoteIndex;i++)
         {
             System.out.println(notes[i]);
         }
-        System.out.println("=============Notebook end===============");
+        System.out.println("=============Notebook content end===============");
     }
-
 
     /**
      *Edit note with specified title
@@ -107,7 +113,7 @@ class Notebook {
      */
     public  boolean editNote(String noteTitle,String newText)
     {
-        for (int i = 0; i <lastNoteIndex ; i++) {
+        for (int i = 0; i <=lastNoteIndex ; i++) {
             if(notes[i].getNoteTitle().equals(noteTitle))
             {
                 notes[i].setNoteText(newText);
@@ -118,25 +124,37 @@ class Notebook {
     }
 
     /**
-     *Return array of notes in the notebook
+     *Return notes loaded into the notebook
+     * @return Note[] array of notes
      */
-    public Note[] showAllNotes()
-    {
-        return Arrays.copyOf(notes,lastNoteIndex);
-
+    public Note[] getAllNotes() {
+        return Arrays.copyOf(notes,lastNoteIndex+1);
     }
-    private void shiftNotesToLeft(int i)
-    {
-        for(;i<lastNoteIndex-1;i++)
+
+    /**Return number of Notes loaded into this Notebook instance
+     */
+  public int size()
+  {
+      return lastNoteIndex+1;
+  }
+
+  private void shiftNotesToLeft(int i) {
+        for(;i<lastNoteIndex;i++)
         {
             notes[i]=notes[i+1];
         }
-        notes[--lastNoteIndex]=null;
+        notes[lastNoteIndex--]=null;
     }
 
+    /**Return maximum number of Notes in this Notebook instance
+     */
+    public int getNoteBookMaxCapacity()
+    {
+        return noteBookMaxCapacity;
+    }
     private void resizeNotes()
     {
-        if(lastNoteIndex ==notes.length&& lastNoteIndex <noteBookMaxCapacity)
+        if(lastNoteIndex ==notes.length-1&& lastNoteIndex <noteBookMaxCapacity)
         {
             int newNotesLength=notes.length+notes.length/2;
             if(newNotesLength>noteBookMaxCapacity){
@@ -146,4 +164,6 @@ class Notebook {
             System.arraycopy(notes,0,resizedNotes,0,notes.length);
         }
     }
+
+
 }

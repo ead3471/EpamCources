@@ -3,3 +3,5 @@ rootProject.name = 'EpamCources'
 include 'core',
         'intro',
         'homeworks'
+include 'oop'
+

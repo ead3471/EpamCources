@@ -4,6 +4,12 @@
 /**
  * Created by Freemind on 2016-08-21.
  */
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
 import static java.lang.Math.PI;
 
 
@@ -49,6 +55,9 @@ public class CommandAgrs  {
         }
 
         foo(new int[]{1,2,3});
+
+
+
     }
 
 
@@ -94,6 +103,34 @@ class B extends A
 
     public static void main(String[] args) {
         A a=new B().bar();
-        System.out.println(a.a);
+        PrintStream out = System.out;
+        PrintStream out1 = out;
+        out1.println(a.a);
+
+       // List<A> dd=new ArrayList<B>();
+        //List<? extends A> dd=new ArrayList<B>();
+    }
+}
+
+
+class GenTest<T >
+{
+    public T field=null;
+
+    GenTest(T value)
+    {
+        field=value;
+    }
+
+
+
+    public static void main(String[] args) {
+
+        Integer[] arr=new Integer[5];
+
+        GenTest<Integer[]> test=new GenTest<>(arr);
+
+        System.out.println(Arrays.toString(test.field));
+
     }
 }

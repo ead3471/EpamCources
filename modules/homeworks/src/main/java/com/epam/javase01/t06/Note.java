@@ -19,7 +19,7 @@ class Note{
 
 
     /**
-     * Constructs a note with specified title without text
+     * Constructs a note with specified title.
      */
     Note(String noteTitle)
     {
@@ -52,7 +52,7 @@ class Note{
 
 
     /**
-     * return String representation of note
+     * @return String representation of note
      */
     public String toString()
     {
