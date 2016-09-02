@@ -1,8 +1,11 @@
 package com.epam.javase01.t06;
 
+import com.epam.javase01.t06.Exceptions.NoteNotFoundException;
 import com.epam.javase01.t06.Exceptions.NotebookIsFullException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**Simple class implements Notebook functionality
  */
@@ -85,6 +88,58 @@ class Notebook {
         }
         return isOneDeleted;
     }
+
+
+    /**Method return List of notes with specified title
+     *
+     * @return <code>List<Note></code> of Note with specified note title
+     */
+    public List<Note> getAllNotesByTitle(String noteTitle)
+    {
+        List<Note> resultList=new ArrayList();
+        for(int i=0;i<=lastNoteIndex;i++)
+        {
+            if(notes[i].getNoteTitle().equals(noteTitle))
+            {
+                resultList.add(notes[i]);
+            }
+        }
+
+        return resultList;
+    }
+
+    /**Method return first Notebook Note with specified title
+     *
+     * @return  Note with specified note title
+     * @throws NoteNotFoundException in case of Note with specified title is not found
+     */
+    public Note getNoteByTitle(String noteTitle) throws  NoteNotFoundException
+    {
+        for(int i=0;i<=lastNoteIndex;i++)
+        {
+            if(notes[i].getNoteTitle().equals(noteTitle))
+            {
+                return notes[i];
+            }
+        }
+
+        throw new NoteNotFoundException("Element with title "+noteTitle+" not found");
+    }
+
+    /**Method return Note with specified index
+     *
+     * @return  Note with specified index
+     * @throws IllegalArgumentException in case of specified noteIndex out of bounds
+     */
+    public Note getNoteByIndex(int noteIndex)
+    {
+        if(noteIndex>lastNoteIndex|| noteIndex<0)
+            throw new IllegalArgumentException("Specified Note Index is out of Notebook size");
+
+        return notes[noteIndex];
+    }
+
+
 
     /**Removes Note at the specified position
        */

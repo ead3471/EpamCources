@@ -18,6 +18,8 @@ public class CommandAgrs  {
 
     static int PI=10;
 
+    String a;
+
     public static void main(String[] args) {
         if (args.length==0) System.out.println("No arguments passed!");
         for (String arg: args) {
@@ -58,8 +60,18 @@ public class CommandAgrs  {
 
 
 
+    Runnable noArguments=()-> foo();// без аргуметов
+
+
+
+
     }
 
+
+    private static  void foo()
+    {
+
+    }
 
 
     static void foo(Object ...args)
