@@ -128,7 +128,7 @@ class Notebook {
 
     /**Method return Note with specified index
      *
-     * @return  Note with specified index
+     * @return  Note with specified   index
      * @throws IllegalArgumentException in case of specified noteIndex out of bounds
      */
     public Note getNoteByIndex(int noteIndex)
