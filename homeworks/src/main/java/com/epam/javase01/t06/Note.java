@@ -4,6 +4,7 @@ package com.epam.javase01.t06;
  *
  * Note consist from note title and note text
  */
+
 class Note{
     private String noteTitle;
     private String noteText;
@@ -36,6 +37,7 @@ class Note{
     /**
      * Return note title
      */
+    @SuppressWarnings("WeakerAccess")
     public String getNoteTitle() {
         return noteTitle;
     }
