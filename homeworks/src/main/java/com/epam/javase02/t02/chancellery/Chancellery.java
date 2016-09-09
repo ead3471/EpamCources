@@ -20,8 +20,8 @@ public abstract class Chancellery {
     }
 
     public Chancellery(String manufacturerName,String name,double price) {
-        if(price<0.0)
-            throw new IllegalArgumentException("Price must be >0");
+        if(price<0 || Double.isNaN(price))
+            throw new IllegalArgumentException("Price must be >0 and not NaN");
         this.price = price;
         this.name = name;
         this.manufacturerName = manufacturerName;
@@ -45,12 +45,9 @@ public abstract class Chancellery {
 
     @Override
     public String toString() {
-        return "SimpleChancellery{" +
-                "price=" + price +
-                ", name='" + name + '\''+
-                '}';
+        return name+"{manufacturer:"+getManufacturerName()+" price="+getPrice()+"}";
     }
 
-
+   /// public abstract Chancellery createRandomInstanse();
 
 }

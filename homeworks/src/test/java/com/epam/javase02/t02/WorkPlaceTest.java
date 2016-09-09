@@ -21,11 +21,11 @@ public class WorkPlaceTest {
     {
         WorkPlace workPlace=new WorkPlace();
 
-        workPlace.addStationery( new SimpleChancellery(10.0,"Pen",1));
-        workPlace.addStationery( new SimpleChancellery(10.0,"Pen",1));
-        workPlace.addStationery( new SimpleChancellery(10.0,"Pen",2));
-        workPlace.addStationery( new SimpleChancellery(10.0,"Stepler",3));
-        workPlace.addStationery( new SimpleChancellery(10.0,"BookKnife",4));
+        workPlace.addChancellery( new SimpleChancellery(10.0,"Pen",1));
+        workPlace.addChancellery( new SimpleChancellery(10.0,"Pen",1));
+        workPlace.addChancellery( new SimpleChancellery(10.0,"Pen",2));
+        workPlace.addChancellery( new SimpleChancellery(10.0,"Stepler",3));
+        workPlace.addChancellery( new SimpleChancellery(10.0,"BookKnife",4));
         assertThat(workPlace.calcWorkerStationeryPrice(),is(40.0));
     }
 
@@ -35,7 +35,7 @@ public class WorkPlaceTest {
         WorkPlace workPlace=new WorkPlace();
 
         Chancellery pen= new SimpleChancellery(0.0,"Pen",12);
-        workPlace.addStationery(pen);
+        workPlace.addChancellery(pen);
 
         assertThat(workPlace.contains(pen),is(true));
 
@@ -50,9 +50,9 @@ public class WorkPlaceTest {
         Chancellery pen1= new SimpleChancellery(2.0,"Pen1",13);
         Chancellery pen2= new SimpleChancellery(3.0,"Pen2",13);
 
-        workPlace.addStationery(pen);
-        workPlace.addStationery(pen1);
-        workPlace.addStationery(pen2);
+        workPlace.addChancellery(pen);
+        workPlace.addChancellery(pen1);
+        workPlace.addChancellery(pen2);
         workPlace.removeStationery(pen1);
 
         assertThat(workPlace.contains(pen1),is(false));

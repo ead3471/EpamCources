@@ -20,6 +20,7 @@ public class NoteBook extends Chancellery
        price=DEFAULT_PRICE;
     }
 
+
     public NoteBook(String manufacturerName, PaperFormat paperFormat, double price)
     {
         super(manufacturerName,price);
@@ -60,9 +61,6 @@ public class NoteBook extends Chancellery
         result = 31 * result + getFormat().hashCode();
         return result;
     }
-
-
-
 }
 
 

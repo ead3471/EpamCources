@@ -56,15 +56,6 @@ public class Pen extends Chancellery {
         result = 43 * result + penColor.hashCode();
         return result;
     }
-
-    @Override
-    public String toString() {
-        return "Pen{" +
-                "manufacturer='" + manufacturerName + '\'' +
-                ", penPasteColor=" + penPasteColor +
-                ", penColor=" + penColor +
-                '}';
-    }
 }
 
 

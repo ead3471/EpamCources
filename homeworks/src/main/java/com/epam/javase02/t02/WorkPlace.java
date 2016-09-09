@@ -13,7 +13,7 @@ import java.util.Set;
 public class WorkPlace {
     Collection<Chancellery> workerChancellery =new ArrayList();
 
-    public void addStationery(Chancellery newChancellery)
+    public void addChancellery(Chancellery newChancellery)
     {
         workerChancellery.add(newChancellery);
     }
