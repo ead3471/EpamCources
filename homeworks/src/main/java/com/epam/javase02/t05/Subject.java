@@ -1,7 +1,5 @@
 package com.epam.javase02.t05;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -10,62 +8,66 @@ import java.util.Random;
 public enum Subject {
     MATH {
         @Override
-        Number rateStudent(Student student) {
+        public Number rateStudent(Student student) {
             return rnd.nextDouble()*5;
         }
     },
     GEOMETRY {
         @Override
-        Number rateStudent(Student student) {
-            return rnd.nextDouble()*5;
+        public String getRateFormat()
+        {
+            return "d";
+        }
+        @Override
+        public Number rateStudent(Student student) {
+            return rnd.nextInt(5);
         }
     },
     GEOGRAPHY {
         @Override
-        Number rateStudent(Student student) {
+        public Number rateStudent(Student student) {
             return rnd.nextDouble()*5;
         }
     },
     PHYSICS {
         @Override
-        Number rateStudent(Student student) {
+        public Number rateStudent(Student student) {
             return rnd.nextDouble()*5;
         }
     },
     QUANTUM_PHYSICS {
         @Override
-        Number rateStudent(Student student) {
-            return rnd.nextDouble()*5;
+        public Number rateStudent(Student student) {
+            return rnd.nextInt(12);
+        }
+
+        @Override
+        public String getRateFormat()
+        {
+            return "d";
         }
     },
     TOE {
         @Override
-        Number rateStudent(Student student) {
+        public Number rateStudent(Student student) {
             return rnd.nextDouble()*5;
         }
     },
     PHILOSOPHY {
         @Override
-        Number rateStudent(Student student) {
+       public Number rateStudent(Student student) {
             return rnd.nextDouble()*5;
         }
     };
 
-
-
-
-
-
-
     protected Random rnd=new Random();
-    private Map<Student,Number> studentsInGroup=new HashMap<>();
+    public abstract Number rateStudent(Student student);
+    private final static String DEFAULT_RATE_FORMAT =".2f";
 
-    public void addStudent(Student student)
+    public  String getRateFormat()
     {
-        studentsInGroup.put(student, rateStudent(student));
-    }
-
-    abstract Number rateStudent(Student student);
+        return DEFAULT_RATE_FORMAT;
+    };
 
 
 

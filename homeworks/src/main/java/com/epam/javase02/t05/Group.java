@@ -52,8 +52,18 @@ public class Group {
     {
         System.out.println("Group:"+groupId+" Subject:"+groupSubject);
         for (Student student:students.keySet()) {
-            System.out.println(student+" : "+students.get(student));
+
+
+            System.out.printf("%-25s : %"+ groupSubject.getRateFormat()+"\n",student,students.get(student));
         }
     }
 
+    public String getRateFormat()
+    {
+        return groupSubject.getRateFormat();
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
 }
