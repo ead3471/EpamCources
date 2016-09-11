@@ -114,7 +114,7 @@ class StudentsGenerator
     {
         ArrayList<Group> resultList=new ArrayList<>();
 
-        int groupsNumber=rnd.nextInt(10)+1;
+        int groupsNumber=rnd.nextInt(11)+1;
 
         while (groupsNumber>0)
         {
