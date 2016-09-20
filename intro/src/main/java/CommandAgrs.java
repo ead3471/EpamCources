@@ -48,6 +48,8 @@ public class CommandAgrs  {
         Double dd=new Double(15);
 
         System.out.println(System.in.read());
+
+
         
     }
 

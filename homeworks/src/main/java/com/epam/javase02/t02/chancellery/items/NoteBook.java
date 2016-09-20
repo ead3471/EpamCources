@@ -7,7 +7,7 @@ import com.epam.javase02.t02.chancellery.Chancellery;
  */
 public class NoteBook extends Chancellery
 {
-    private int numberOfPapers =96;
+    private int numberOfPages =96;
     private  PaperFormat format=PaperFormat.A4;
     private static final double DEFAULT_PRICE=15.0;
 
@@ -21,20 +21,37 @@ public class NoteBook extends Chancellery
     }
 
 
-    public NoteBook(String manufacturerName, PaperFormat paperFormat, double price)
+    public NoteBook(String manufacturerName, double price, PaperFormat paperFormat,int numberOfPages)
+    {
+        super(manufacturerName,price);
+        this.numberOfPages =numberOfPages;
+        this.format=paperFormat;
+    }
+
+    public NoteBook(String manufacturerName, double price, PaperFormat paperFormat)
     {
         super(manufacturerName,price);
         this.format=paperFormat;
     }
 
-    public PaperFormat getFormat()
+   public NoteBook(String manufacturerName, double price)
+    {
+        super(manufacturerName,price);
+    }
+
+    public NoteBook(double price)
+    {
+        super(price);
+    }
+
+    public PaperFormat getPaperFormat()
     {
         return format;
     }
 
-    public int getNumberOfPapers()
+    public int getNumberOfPages()
     {
-        return numberOfPapers;
+        return numberOfPages;
     }
 
 
@@ -50,15 +67,15 @@ public class NoteBook extends Chancellery
         if(this.format!= noteBook.format) return false;
 
         if(this.price!= noteBook.price) return false;
-        if (getNumberOfPapers() != noteBook.getNumberOfPapers()) return false;
-        return getFormat() == noteBook.getFormat();
+        if (getNumberOfPages() != noteBook.getNumberOfPages()) return false;
+        return getPaperFormat() == noteBook.getPaperFormat();
 
     }
 
     @Override
     public int hashCode() {
-        int result = getNumberOfPapers();
-        result = 31 * result + getFormat().hashCode();
+        int result = getNumberOfPages();
+        result = 31 * result + getPaperFormat().hashCode();
         return result;
     }
 }

@@ -47,4 +47,7 @@ public class ScotchTape extends Chancellery {
         return widthInMm/10.0;
     }
 
+    public Color getColor() {
+        return tapeColor;
+    }
 }

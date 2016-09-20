@@ -13,6 +13,13 @@ public abstract class Chancellery {
 
     }
 
+
+    public Chancellery( double price)
+    {
+        this.price=price;
+    }
+
+
     public Chancellery(String manufacturerName,double price)
     {
         this.manufacturerName=manufacturerName;
@@ -38,7 +45,7 @@ public abstract class Chancellery {
 
 
 
-    String getManufacturerName() {
+    public String getManufacturerName() {
         return manufacturerName;
     }
 

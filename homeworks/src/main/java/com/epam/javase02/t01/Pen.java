@@ -19,14 +19,19 @@ public class Pen extends Chancellery {
         price=DEFAULT_PRICE;
     }
 
-    public Pen(String manufacturerName, Color penColor,double price) {
-        this(manufacturerName,DEFAULT_PRICE,penColor,Color.BLACK);
+    public Pen(String manufacturerName,double price, Color penColor) {
+        this(manufacturerName,price,penColor,Color.BLACK);
     }
 
     public Pen(String manufacturerName,double price,Color penColor, Color penPasteColor) {
         super(manufacturerName,"Pen",price);
         this.penColor = penColor;
         this.penPasteColor=penPasteColor;
+    }
+
+    public Pen(double price)
+    {
+        this.price=price;
     }
 
     public Color getPenPasteColor() {
