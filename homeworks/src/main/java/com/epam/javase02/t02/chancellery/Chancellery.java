@@ -8,6 +8,7 @@ public abstract class Chancellery {
     protected String name="Noname";
     protected String manufacturerName="Noname";
 
+
     public Chancellery()
     {
 
@@ -55,6 +56,27 @@ public abstract class Chancellery {
         return name+"{manufacturer:"+getManufacturerName()+" price="+getPrice()+"}";
     }
 
-   /// public abstract Chancellery createRandomInstanse();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Chancellery that = (Chancellery) o;
+
+        if (Double.compare(that.getPrice(), getPrice()) != 0) return false;
+        if (!getName().equals(that.getName())) return false;
+        return getManufacturerName().equals(that.getManufacturerName());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(getPrice());
+        result = (int) (temp ^ (temp >>> 32));
+        result = 31 * result + getName().hashCode();
+        result = 31 * result + getManufacturerName().hashCode();
+        return result;
+    }
 }

@@ -36,7 +36,22 @@ public class Stapler extends Chancellery {
         return clipsSize;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
+        Stapler stapler = (Stapler) o;
 
+        return getClipsSize() == stapler.getClipsSize();
 
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + getClipsSize();
+        return result;
+    }
 }

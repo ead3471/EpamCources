@@ -27,7 +27,7 @@ public class WorkPlaceTest {
         workPlace.addChancellery( new Pen(12.0));
         workPlace.addChancellery(new Stapler(10));
 
-        assertThat(workPlace.calcWorkerStationeryPrice(),is(47.0));
+        assertThat(workPlace.calcWorkerChancellerySumPrice(),is(47.0));
      }
 
     @Test

@@ -9,7 +9,12 @@ import java.util.Set;
 
 /**
  * Created by Freemind on 2016-09-06.
+ *Напишите приложение, позволяющее вести учет канцелярских товаров на рабочем месте
+ *сотрудника. Определите полную стоимость канцтоваров у определенного сотрудника.
+ *
+ *
  */
+ 
 public class WorkPlace {
     Collection<Chancellery> workerChancellery =new ArrayList();
 
@@ -23,7 +28,7 @@ public class WorkPlace {
         return workerChancellery.remove(removingChancellery);
     }
 
-    public double calcWorkerStationeryPrice()
+    public double calcWorkerChancellerySumPrice()
     {
         double totalSumm=0.0;
         for (Chancellery chancellery : workerChancellery) {

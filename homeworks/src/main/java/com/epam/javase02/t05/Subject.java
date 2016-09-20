@@ -7,68 +7,94 @@ import java.util.Random;
  */
 public enum Subject {
     MATH {
-        @Override
-        public Number rateStudent(Student student) {
-            return rnd.nextDouble()*5;
-        }
     },
-    GEOMETRY {
-        @Override
-        public String getRateFormat()
-        {
-            return "d";
-        }
-        @Override
-        public Number rateStudent(Student student) {
-            return rnd.nextInt(5);
-        }
-    },
-    GEOGRAPHY {
-        @Override
-        public Number rateStudent(Student student) {
-            return rnd.nextDouble()*5;
-        }
-    },
-    PHYSICS {
-        @Override
-        public Number rateStudent(Student student) {
-            return rnd.nextDouble()*5;
-        }
-    },
-    QUANTUM_PHYSICS {
-        @Override
-        public Number rateStudent(Student student) {
-            return rnd.nextInt(12);
-        }
 
-        @Override
-        public String getRateFormat()
+    GEOMETRY {
         {
-            return "d";
+            studentsRater=new IntegerRater(12);
         }
     },
+
+    GEOGRAPHY {
+    },
+
+    PHYSICS {
+    },
+
+    QUANTUM_PHYSICS {
+        {
+            studentsRater=new IntegerRater(42);
+        }
+    },
+
     TOE {
-        @Override
-        public Number rateStudent(Student student) {
-            return rnd.nextDouble()*5;
-        }
     },
+
     PHILOSOPHY {
-        @Override
-       public Number rateStudent(Student student) {
-            return rnd.nextDouble()*5;
-        }
     };
 
     protected Random rnd=new Random();
-    public abstract Number rateStudent(Student student);
-    private final static String DEFAULT_RATE_FORMAT =".2f";
+
+    protected StudentsRater studentsRater=new FloatRater(5.0f);
 
     public  String getRateFormat()
     {
-        return DEFAULT_RATE_FORMAT;
+        return studentsRater.getRateFormat();
     };
+    public  Number rateStudent(Student student){
+        return studentsRater.getRate(student);
+    }
 
+interface StudentsRater
+{
+    Number getRate(Student student);
+    String getRateFormat();
+}
+
+class IntegerRater implements StudentsRater
+{
+    Random rmd=new Random();
+    int maxRateValue;
+    IntegerRater(int maxRateValue)
+    {
+        assert(maxRateValue>0);
+        this.maxRateValue=maxRateValue;
+    }
+
+    @Override
+    public Number getRate(Student student) {
+        return new Integer(rnd.nextInt(maxRateValue)+1);
+    }
+
+    @Override
+    public String getRateFormat() {
+        return "d";
+    }
+}
+
+class FloatRater implements StudentsRater
+    {
+        float maxRateValue;
+        FloatRater(float maxRateValue)
+        {
+            assert(maxRateValue>0);
+            this.maxRateValue=maxRateValue;
+        }
+
+        @Override
+        public Number getRate(Student student) {
+            float rate=0;
+            while(rate==0)
+             rate=rnd.nextFloat()*maxRateValue;
+
+            return rate;
+        }
+
+        @Override
+        public String getRateFormat() {
+            return ".2f";
+        }
+}
 
 
 }

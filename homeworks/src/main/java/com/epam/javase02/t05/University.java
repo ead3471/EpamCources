@@ -99,7 +99,7 @@ class StudentsGenerator
 
     public static void loadStudentsToGroup(Group group,List<Student> students)
     {
-        int studentsInGroup=rnd.nextInt(students.size());
+        int studentsInGroup=rnd.nextInt(students.size()/2)+1;
         while(studentsInGroup>0)
         {
             Student student=students.get(rnd.nextInt(students.size()));
@@ -119,7 +119,7 @@ class StudentsGenerator
         while (groupsNumber>0)
         {
             Subject groupSubject=Subject.values()[rnd.nextInt(Subject.values().length)];
-            resultList.add(new Group(groupSubject+"__"+groupsNumber--,groupSubject));
+            resultList.add(new Group(groupSubject+"_"+groupsNumber--,groupSubject));
         }
         return resultList;
 

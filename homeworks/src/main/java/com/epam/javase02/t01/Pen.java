@@ -14,6 +14,9 @@ public class Pen extends Chancellery {
 
     private final static double  DEFAULT_PRICE=10.0;
 
+    {
+        name="Pen";
+    }
 
     public Pen() {
         price=DEFAULT_PRICE;
@@ -46,19 +49,20 @@ public class Pen extends Chancellery {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         Pen pen = (Pen) o;
 
-        if (!manufacturerName.equals(pen.manufacturerName)) return false;
-        if (penPasteColor != pen.penPasteColor) return false;
-        return penColor == pen.penColor;
+        if (getPenPasteColor() != pen.getPenPasteColor()) return false;
+        return getPenColor() == pen.getPenColor();
+
     }
 
     @Override
     public int hashCode() {
-        int result = manufacturerName.hashCode();
-        result = 43 * result + penPasteColor.hashCode();
-        result = 43 * result + penColor.hashCode();
+        int result = super.hashCode();
+        result = 31 * result + getPenPasteColor().hashCode();
+        result = 31 * result + getPenColor().hashCode();
         return result;
     }
 }

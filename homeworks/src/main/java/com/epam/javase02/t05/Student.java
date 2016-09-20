@@ -36,16 +36,20 @@ public class Student {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Student)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Student student = (Student) o;
 
-        return getId() == student.getId();
+        return (getId() == student.getId());
+
 
     }
 
     @Override
     public int hashCode() {
-        return (int) (getId() ^ (getId() >>> 32));
+        int result = getFirstName().hashCode();
+        result = 31 * result + getLastName().hashCode();
+        result = 31 * result + (int) (getId() ^ (getId() >>> 32));
+        return result;
     }
 }

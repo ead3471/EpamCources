@@ -54,28 +54,24 @@ public class NoteBook extends Chancellery
         return numberOfPages;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof NoteBook)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         NoteBook noteBook = (NoteBook) o;
 
-
-        if(this.manufacturerName!= noteBook.manufacturerName) return false;
-        if(this.format!= noteBook.format) return false;
-
-        if(this.price!= noteBook.price) return false;
         if (getNumberOfPages() != noteBook.getNumberOfPages()) return false;
-        return getPaperFormat() == noteBook.getPaperFormat();
+        return format == noteBook.format;
 
     }
 
     @Override
     public int hashCode() {
-        int result = getNumberOfPages();
-        result = 31 * result + getPaperFormat().hashCode();
+        int result = super.hashCode();
+        result = 31 * result + getNumberOfPages();
+        result = 31 * result + format.hashCode();
         return result;
     }
 }
