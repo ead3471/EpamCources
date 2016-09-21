@@ -22,19 +22,12 @@ public class Function {
         double b=CommonUtils.tryGetDoubleFromStringArgs(1,2*Math.PI,args);
         double step=CommonUtils.tryGetDoubleFromStringArgs(2,0.1,args);
 
-        if(a>b) {
-            System.out.println("Bad input args: a must be less or equal b");
-            return;
-        }
-
-        if(step<=0.0){
-            System.out.println("Bad input args: step must be greater than zero");
-            return;
-        }
+        assert(a>b);
+        assert(step>0);
 
         for(;a<=b;a+=step)
         {
-            System.out.println(a+" : "+getFunctionValue(a));
+            System.out.printf("%-10.4f%-+10.4f\n",a,getFunctionValue(a));
         }
    }
 

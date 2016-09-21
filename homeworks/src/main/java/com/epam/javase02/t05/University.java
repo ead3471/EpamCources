@@ -1,9 +1,8 @@
 package com.epam.javase02.t05;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import sun.font.ScriptRun;
+
+import java.util.*;
 
 /**
  * Created by Freemind on 2016-09-09.
@@ -26,19 +25,34 @@ public class University {
         return new University(StudentsGenerator.generateStudents(15),StudentsGenerator.generateGroups());
     }
 
-    private void distributeStudentsByGroups()
-    {
-        for (Group group:educationGroups)
-        {
-            StudentsGenerator.loadStudentsToGroup(group,educatedStudents);
-        }
-    }
-
     public void printStudentRates(Student student, List<Group> studentGroups)
     {
         for(Group group:studentGroups)
         {
             System.out.printf("%-20s : %"+group.getRateFormat()+"\n",group.getGroupId(),group.getStudentRate(student));
+        }
+    }
+
+    public List<Group> getUniversityGroups()
+    {
+        ArrayList resultList=new ArrayList<Group>();
+        resultList.addAll(educationGroups);
+        return resultList;
+    }
+
+    public List<Student> getUniversityStudents()
+    {
+        ArrayList resultList=new ArrayList<Student>();
+        resultList.addAll(educatedStudents);
+        return resultList;
+    }
+
+
+    private void distributeStudentsByGroups()
+    {
+        for (Group group:educationGroups)
+        {
+            StudentsGenerator.loadStudentsToGroup(group,educatedStudents);
         }
     }
 

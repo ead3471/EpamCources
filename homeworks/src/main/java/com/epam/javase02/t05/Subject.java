@@ -53,7 +53,6 @@ interface StudentsRater
 
 class IntegerRater implements StudentsRater
 {
-    Random rmd=new Random();
     int maxRateValue;
     IntegerRater(int maxRateValue)
     {
@@ -85,8 +84,7 @@ class FloatRater implements StudentsRater
         public Number getRate(Student student) {
             float rate=0;
             while(rate==0)
-             rate=rnd.nextFloat()*maxRateValue;
-
+                rate=rnd.nextFloat()*maxRateValue;
             return rate;
         }
 
