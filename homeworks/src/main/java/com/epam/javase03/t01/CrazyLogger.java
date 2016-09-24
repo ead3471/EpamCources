@@ -4,8 +4,6 @@ import java.io.*;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -19,9 +17,9 @@ import java.util.regex.Pattern;
  */
 public class CrazyLogger {
     private final String TIME_FORMAT="dd-MM-YYYY : HH-mm";
-    private StringBuilder loggerPlace=new StringBuilder();
-    private final String LOG_MSG_START_PATTERN ="[\\d]{2}-[\\d]{2}-[\\d]{4}\\s:\\s[\\d]{2}-[\\d]{2}-[\\d]{2}-";
-    private final String LOG_MSG_DELIMETER=";\n";
+    private final String LOG_MSG_START_PATTERN ="[\\d]{2}-[\\d]{2}-[\\d]{4}\\s:\\s[\\d]{2}-[\\d]{2}-";
+    private final String LOG_MSG_DELIMITER =";\n";
+    private StringBuilder loggingProvider =new StringBuilder();
 
     public void logMessage(String message){
         Instant currentTime=Instant.now();
@@ -30,7 +28,7 @@ public class CrazyLogger {
 
     public void logMessage(String message,Instant logTime){
         String formattedInstant= DateTimeFormatter.ofPattern(TIME_FORMAT).withZone(ZoneId.systemDefault()).format(logTime);
-        loggerPlace.append(formattedInstant).append("-").append(message).append(LOG_MSG_DELIMETER);
+        loggingProvider.append(formattedInstant).append("-").append(message).append(LOG_MSG_DELIMITER);
     }
 
     public void findByMessage(String msgPattern, PrintStream outStream) throws IOException {
@@ -50,12 +48,12 @@ public class CrazyLogger {
     }
 
     public void flushLogToWriter(Writer out) throws IOException {
-        out.write(loggerPlace.toString());
+        out.write(loggingProvider.toString());
     }
 
     private void printMatches(PrintStream outStream, Pattern pattern)
     {
-        String[] logLines = loggerPlace.toString().split(LOG_MSG_DELIMETER);
+        String[] logLines = loggingProvider.toString().split(LOG_MSG_DELIMITER);
 
         for (String logLine : logLines) {
             if (pattern.matcher(logLine).matches()) {
@@ -76,7 +74,7 @@ public class CrazyLogger {
         logger.findByMessage(".*\\s[2,4,6,8,0]",System.out);
         logger.findByLogTime(".*[1,3,5,7,9]",System.out);
         System.out.println("\nSRC LOG");
-        System.out.println(logger.loggerPlace);
+        System.out.println(logger.loggingProvider);
 
     }
 }
