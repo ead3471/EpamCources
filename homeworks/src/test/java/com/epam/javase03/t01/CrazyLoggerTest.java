@@ -2,14 +2,10 @@ package com.epam.javase03.t01;
 
 import org.junit.Test;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.Instant;
-import java.util.List;
 import java.util.Random;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by Freemind on 2016-09-21.

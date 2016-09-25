@@ -11,7 +11,7 @@ public class Group {
     private String groupId="";
     private Subject groupSubject=Subject.GEOMETRY;
 
-    private Map<Student,Number> students=new HashMap<>();
+    private Map<Person,Number> students=new HashMap<>();
 
     public Group(String groupId, Subject subject)
     {
@@ -19,31 +19,31 @@ public class Group {
         groupSubject=subject;
     }
 
-    public void addStudent(Student newStudent)
+    public void addStudent(Person newPerson)
     {
-        students.put(newStudent,0);// TODO: 2016-09-09  default RATE???
+        students.put(newPerson,0);// TODO: 2016-09-09  default RATE???
     }
 
 
     public void rateStudents()
     {
-        for(Student student:students.keySet())
+        for(Person person :students.keySet())
         {
-            students.put(student,groupSubject.rateStudent(student));
+            students.put(person,groupSubject.rateStudent(person));
         }
     }
 
-    public Number getStudentRate(Student student)
+    public Number getStudentRate(Person person)
     {
-        return students.get(student);
+        return students.get(person);
     }
 
-    public boolean isStudentInGroup(Student student)
+    public boolean isStudentInGroup(Person person)
     {
-        return students.containsKey(student);
+        return students.containsKey(person);
     }
 
-    public Set<Student> getStudentsInGroup()
+    public Set<Person> getStudentsInGroup()
     {
         return students.keySet();
     }
@@ -51,10 +51,10 @@ public class Group {
     public void printGroup()
     {
         System.out.println("Group:"+groupId+" Subject:"+groupSubject);
-        for (Student student:students.keySet()) {
+        for (Person person :students.keySet()) {
 
 
-            System.out.printf("%-25s : %"+ groupSubject.getRateFormat()+"\n",student,students.get(student));
+            System.out.printf("%-25s : %"+ groupSubject.getRateFormat()+"\n", person,students.get(person));
         }
     }
 

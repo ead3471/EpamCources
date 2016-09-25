@@ -1,7 +1,5 @@
 package com.epam.javase02.t05;
 
-import sun.font.ScriptRun;
-
 import java.util.*;
 
 /**
@@ -9,27 +7,27 @@ import java.util.*;
  */
 public class University {
 
-    private List<Student> educatedStudents=new ArrayList<>();
+    private List<Person> educatedPersons =new ArrayList<>();
 
     private List<Group> educationGroups=new ArrayList<>();
 
-    public University(List<Student> enteredStudents, List<Group> educationGroups)
+    public University(List<Person> enteredPersons, List<Group> educationGroups)
     {
-        educatedStudents.addAll(enteredStudents);
+        educatedPersons.addAll(enteredPersons);
         this.educationGroups.addAll(educationGroups);
         distributeStudentsByGroups();
     }
 
     public static University generateUniversity()
     {
-        return new University(StudentsGenerator.generateStudents(15),StudentsGenerator.generateGroups());
+        return new University(PersonsGenerator.generatePersons(15), PersonsGenerator.generateGroups());
     }
 
-    public void printStudentRates(Student student, List<Group> studentGroups)
+    public void printStudentRates(Person person, List<Group> studentGroups)
     {
         for(Group group:studentGroups)
         {
-            System.out.printf("%-20s : %"+group.getRateFormat()+"\n",group.getGroupId(),group.getStudentRate(student));
+            System.out.printf("%-20s : %"+group.getRateFormat()+"\n",group.getGroupId(),group.getStudentRate(person));
         }
     }
 
@@ -40,10 +38,10 @@ public class University {
         return resultList;
     }
 
-    public List<Student> getUniversityStudents()
+    public List<Person> getUniversityStudents()
     {
-        ArrayList resultList=new ArrayList<Student>();
-        resultList.addAll(educatedStudents);
+        ArrayList resultList=new ArrayList<Person>();
+        resultList.addAll(educatedPersons);
         return resultList;
     }
 
@@ -52,16 +50,16 @@ public class University {
     {
         for (Group group:educationGroups)
         {
-            StudentsGenerator.loadStudentsToGroup(group,educatedStudents);
+            PersonsGenerator.loadStudentsToGroup(group, educatedPersons);
         }
     }
 
-    public List<Group> findStudentsGroups(Student student)
+    public List<Group> findStudentsGroups(Person person)
     {
         ArrayList<Group> resultList=new ArrayList<>();
         for(Group group:educationGroups)
         {
-            if(group.isStudentInGroup(student))
+            if(group.isStudentInGroup(person))
             {
                 resultList.add(group);
             }
@@ -82,76 +80,14 @@ public class University {
             System.out.println();
         }
 
-        Student randomStudent=newUniversity.educatedStudents.get(new Random().nextInt(newUniversity.educatedStudents.size()));
+        Person randomPerson =newUniversity.educatedPersons.get(new Random().nextInt(newUniversity.educatedPersons.size()));
 
-        System.out.println(" Information about student "+randomStudent+" rates:");
+        System.out.println(" Information about student "+ randomPerson +" rates:");
 
-        newUniversity.printStudentRates(randomStudent,newUniversity.findStudentsGroups(randomStudent));
+        newUniversity.printStudentRates(randomPerson,newUniversity.findStudentsGroups(randomPerson));
     }
 
 
 
 }
 
-class StudentsGenerator
-{
-    private static final String[] names={"Jhon","Bill","Jerry","Dave","Mary","Bob","Nick","Homer","Barth","Lisa","Maggy","Marge","Montghomery","Erik","Stan","Kaile","Kenny","Fox",};
-    private static final String[] lastNames={"Gray","Brown","Red","Malder","Scally","Skinner","Simpson","Berns","Smitters","Brohlovsky","Marsh","Kartman","Mackormik","Smith"};
-
-    private final static Random rnd=new Random();
-
-    public static List<Student> generateStudents(int studentsNumber)
-    {
-        ArrayList<Student>resultList=new ArrayList<>();
-        while(studentsNumber>0)
-        {
-            resultList.add(new Student(names[rnd.nextInt(names.length)],lastNames[rnd.nextInt(lastNames.length)],studentsNumber));
-            studentsNumber--;
-        }
-        return resultList;
-    }
-
-    public static void loadStudentsToGroup(Group group,List<Student> students)
-    {
-        int studentsInGroup=rnd.nextInt(students.size()/2)+1;
-        while(studentsInGroup>0)
-        {
-            Student student=students.get(rnd.nextInt(students.size()));
-            if(!group.isStudentInGroup(student)) {
-                group.addStudent(student);
-                studentsInGroup--;
-            }
-        }
-    }
-
-    public static List<Group> generateGroups()
-    {
-        ArrayList<Group> resultList=new ArrayList<>();
-
-        int groupsNumber=rnd.nextInt(11)+1;
-
-        while (groupsNumber>0)
-        {
-            Subject groupSubject=Subject.values()[rnd.nextInt(Subject.values().length)];
-            resultList.add(new Group(groupSubject+"_"+groupsNumber--,groupSubject));
-        }
-        return resultList;
-
-    }
-
-    public static void main(String[] args) {
-        List<Student> newGeneration=generateStudents(10);
-        System.out.println(newGeneration);
-        
-        Group mathGroup=new Group("ELT-111",Subject.MATH);
-        Group geometryGroup=new Group("ELT-112",Subject.GEOMETRY);
-
-        loadStudentsToGroup(mathGroup,newGeneration);
-        loadStudentsToGroup(geometryGroup,newGeneration);
-
-        System.out.println(mathGroup.getStudentsInGroup());
-        System.out.println(geometryGroup.getStudentsInGroup());
-
-        System.out.println(Arrays.toString(Subject.values()));
-    }
- }

@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 public class HtmlParser {
 
     private final static String PARSED_FILE_NAME="homeworks/src/main/resources/Article.html";
+    public static final String  READY_SENTENCES_FILE="homeworks/src/main/resources/Sentences.txt";
     private final static String REFERENCE_TO_PICTURE_PATTERN_STRING="(\\(Рис\\.|рисун[а-я]+?)\\s(\\d+)";
     private final static String PICTURE_INSERTION_PATTERN_STRING="[^\\(](Рис.\\s{0,1}(\\d+))";
     private final static String SENTENCE_PATTERN_STRING ="[А-Я](((([а-я]\\.){2,}.? ?|[^.!?])*?)(([Рр]ис\\.|рисун[а-я]+) ?\\d{1,2})((([а-я]\\.){2,}|[^.!?])*?))+[.?!]";
@@ -57,7 +58,7 @@ public class HtmlParser {
         }
 
         System.out.println("\nFinded sentences:("+findedSentences.size()+")");
-        BufferedReader inFile=new BufferedReader(new FileReader(new File("Sentences.txt")));
+        BufferedReader inFile=new BufferedReader(new FileReader(new File(READY_SENTENCES_FILE)));
 
 
         int readedLinesCount=1;

@@ -29,14 +29,14 @@ public class UniversityTest {
 
         University university=University.generateUniversity();
 
-        List<Student> studentsInUniversity=university.getUniversityStudents();
+        List<Person> studentsInUniversity=university.getUniversityStudents();
         List<Group> groupsInUniversity=university.getUniversityGroups();
 
-        for (Student student:studentsInUniversity) {
-            List<Group> studentsGroups = university.findStudentsGroups(student);
+        for (Person person :studentsInUniversity) {
+            List<Group> studentsGroups = university.findStudentsGroups(person);
 
             for (Group universityGroup : groupsInUniversity) {
-                assertThat(universityGroup.isStudentInGroup(student),is(studentsGroups.contains(universityGroup)));
+                assertThat(universityGroup.isStudentInGroup(person),is(studentsGroups.contains(universityGroup)));
             }
         }
     }

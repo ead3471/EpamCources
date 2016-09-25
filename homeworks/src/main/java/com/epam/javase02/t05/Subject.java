@@ -41,13 +41,13 @@ public enum Subject {
     {
         return studentsRater.getRateFormat();
     };
-    public  Number rateStudent(Student student){
-        return studentsRater.getRate(student);
+    public  Number rateStudent(Person person){
+        return studentsRater.getRate(person);
     }
 
 interface StudentsRater
 {
-    Number getRate(Student student);
+    Number getRate(Person person);
     String getRateFormat();
 }
 
@@ -61,7 +61,7 @@ class IntegerRater implements StudentsRater
     }
 
     @Override
-    public Number getRate(Student student) {
+    public Number getRate(Person person) {
         return new Integer(rnd.nextInt(maxRateValue)+1);
     }
 
@@ -81,7 +81,7 @@ class FloatRater implements StudentsRater
         }
 
         @Override
-        public Number getRate(Student student) {
+        public Number getRate(Person person) {
             float rate=0;
             while(rate==0)
                 rate=rnd.nextFloat()*maxRateValue;
