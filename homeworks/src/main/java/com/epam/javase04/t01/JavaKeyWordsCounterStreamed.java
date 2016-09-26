@@ -22,6 +22,8 @@ public class JavaKeyWordsCounterStreamed {
 
     public void parseFile(String parsedFileFileName, String outFile ) throws IOException {
 
+
+
     initKeyWordSet(javaKeyWordsFile);
         BufferedInputStream inFileStream=new BufferedInputStream(new FileInputStream(parsedFileFileName));
         byte[] readBuffer=new byte[1024];
