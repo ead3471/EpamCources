@@ -4,7 +4,6 @@ import com.epam.javase05.t01.exceptions.LocationIsNotDirectoryException;
 import com.epam.javase05.t01.exceptions.LocationNotFoundException;
 
 import java.io.*;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
@@ -16,10 +15,11 @@ import java.util.List;
  * необходимо реализовать функциональность записи (дозаписи) в файл. Требуется определить
  * исключения для каждого слоя приложения и корректно их обработать.
  */
+
 public class FilesCommander {
-    //String currentLocation;
     private File currentLocation;
-    private final static String PATH_DELIMITER = "/";
+    private final static String PATH_SEPARATOR = File.separator;
+
     public  FilesCommander()
     {
         currentLocation= new File(System.getProperty("user.dir"));
@@ -27,12 +27,9 @@ public class FilesCommander {
 
     public void goToLocation(String locationPath) throws LocationNotFoundException, LocationIsNotDirectoryException {
 
-       if(locationPath.startsWith(PATH_DELIMITER))
-           locationPath=currentLocation.getPath()+locationPath;
+        locationPath=prepareFilePath(locationPath);
 
         File newLocation = new File(locationPath);
-
-
         if (!newLocation.exists())
             throw new LocationNotFoundException(locationPath);
         if (!newLocation.isDirectory())
@@ -41,36 +38,40 @@ public class FilesCommander {
         currentLocation = newLocation;
     }
 
-    public File getCurrentLocation() {
-        return currentLocation;
+    public String getCurrentLocationAbsolutePath() {
+        return currentLocation.getAbsolutePath();
     }
 
-    public List<File> getCurrentLocationFiles() {
+    public List<File> getCurrentLocationContentFiles() {
         return Arrays.asList(currentLocation.listFiles());
     }
 
-    public List<File> getCurrentLocationFiles(FileFilter filter) {
+    public List<File> getCurrentLocationContentFiles(FileFilter filter) {
         return Arrays.asList(currentLocation.listFiles(filter));
     }
 
     public boolean createFile(String filePath) throws IOException {
 
-
         filePath = prepareFilePath(filePath);
 
-
-        if (filePath.lastIndexOf(PATH_DELIMITER) > 0) {
-            new File(currentLocation.getPath() + filePath.substring(0, filePath.lastIndexOf(PATH_DELIMITER))).mkdirs();
+        if (filePath.lastIndexOf(PATH_SEPARATOR) > 0) {
+            new File(filePath.substring(0, filePath.lastIndexOf(PATH_SEPARATOR))).mkdirs();
         }
-
-
-        File newFile = new File(currentLocation.getPath() + filePath);
+        File newFile = new File(filePath);
         return newFile.createNewFile();
+    }
+
+    public boolean createDir(String filePath)
+    {
+        filePath = prepareFilePath(filePath);
+
+        File newFile = new File(filePath);
+        return newFile.mkdirs();
     }
 
     public boolean removeFile(String filePath) {
         filePath = prepareFilePath(filePath);
-        File removedFile = new File(currentLocation.getPath() + filePath);
+        File removedFile = new File(filePath);
         return removedFile.delete();
 
     }
@@ -81,25 +82,29 @@ public class FilesCommander {
     }
 
     private String prepareFilePath(String filePath) {
+        filePath=filePath.replace("/", PATH_SEPARATOR);
         if (!filePathIsValid(filePath)) {
             throw new IllegalArgumentException(filePath);
         }
+        if(filePath.startsWith(PATH_SEPARATOR))
+            filePath=currentLocation.getAbsolutePath()+filePath;
+        else if(!Paths.get(filePath).isAbsolute())
+            filePath=currentLocation+ PATH_SEPARATOR +filePath;
 
-        if (!filePath.startsWith(PATH_DELIMITER))
-            filePath = PATH_DELIMITER + filePath;
         return filePath;
     }
 
     public void appendStringToFile(String filePath, String appendedString) throws IOException {
         filePath = prepareFilePath(filePath);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(currentLocation.getPath() + filePath, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             writer.write(appendedString);
         }
     }
 
     public void rewriteFileByString(String filePath, String writedString) throws IOException {
         filePath = prepareFilePath(filePath);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(currentLocation.getPath() + filePath))) {
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write(writedString);
         }
     }
@@ -108,26 +113,33 @@ public class FilesCommander {
         filePath = prepareFilePath(filePath);
         char[] readBuffer = new char[1024];
 
-        int readedBytesCount = 0;
-        if ((readedBytesCount = reader.read(readBuffer)) > 0) {
-            rewriteFileByString(filePath, new String(readBuffer, 0, readedBytesCount));
+        int readBytesCount = 0;
+        if ((readBytesCount = reader.read(readBuffer)) > 0) {
+            rewriteFileByString(filePath, new String(readBuffer, 0, readBytesCount));
         }
-        while ((readedBytesCount = reader.read(readBuffer)) > 0) {
-            appendStringToFile(filePath, new String(readBuffer, 0, readedBytesCount));
+        while ((readBytesCount = reader.read(readBuffer)) > 0) {
+            appendStringToFile(filePath, new String(readBuffer, 0, readBytesCount));
         }
     }
 
     public void appendFileFromReader(String filePath, Reader reader) throws IOException {
         filePath=prepareFilePath(filePath);
         char[] readBuffer = new char[1024];
-        int readedBytesCount = 0;
+        int readBytesCount = 0;
 
-        while ((readedBytesCount = reader.read(readBuffer)) > 0) {
-            appendStringToFile(filePath, new String(readBuffer, 0, readedBytesCount));
+        while ((readBytesCount = reader.read(readBuffer)) > 0) {
+            appendStringToFile(filePath, new String(readBuffer, 0, readBytesCount));
         }
     }
 
+   public void levelUp()
+   {
+       int lastPathDelimiterIndex=currentLocation.getAbsolutePath().lastIndexOf(PATH_SEPARATOR);
 
+       if(lastPathDelimiterIndex>0)
+        currentLocation=new File(currentLocation.getAbsolutePath().substring(0,currentLocation.getAbsolutePath().lastIndexOf(PATH_SEPARATOR)));
+
+   }
 
 
 }

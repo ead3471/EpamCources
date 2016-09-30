@@ -1,6 +1,8 @@
 package com.epam.javase05.t02;
 
 import org.junit.Test;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,17 +16,22 @@ import static org.junit.Assert.*;
 public class PropertiesFileReaderTest {
     @Test
     public void saveTester() throws IOException {
+        final String savePropertiesFileName="src/test/resources/TestProperties.properties";
         PropertiesFileReader reader = new PropertiesFileReader();
         Map<String, String> randomPropertiesMap = createRandomMap(150);
         for (String key : randomPropertiesMap.keySet()) {
             reader.put(key, randomPropertiesMap.get(key));
         }
 
-        String saveFileName = "src/test/resources/TestProperties.properties";
+        String saveFileName = savePropertiesFileName;
         reader.save(saveFileName);
 
         PropertiesFileReader uploadedReader = PropertiesFileReader.loadFromFile(saveFileName);
+
+        new File(savePropertiesFileName).delete();
+
         assertTrue(uploadedReader.equals(reader));
+
     }
 
     private Map<String, String> createRandomMap(int numberOfKeys) {

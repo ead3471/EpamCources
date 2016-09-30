@@ -4,21 +4,18 @@
 /**
  * Created by Freemind on 2016-08-21.
  */
-import com.sun.deploy.model.LocalApplicationProperties;
-import com.sun.deploy.util.SystemUtils;
+import org.xml.sax.SAXException;
 
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
+
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
 import java.util.regex.Pattern;
-
-import static java.lang.Math.PI;
 
 
 public class CommandAgrs  {
@@ -29,7 +26,7 @@ public class CommandAgrs  {
     String a;
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, SAXException {
 
         System.out.println(Locale.getDefault().getDisplayCountry(Locale.CHINA));
         System.out.println(Locale.getDefault().getDisplayCountry(Locale.JAPAN));
@@ -50,7 +47,12 @@ public class CommandAgrs  {
         System.out.println(System.in.read());
 
 
-        
+        XMLReader reader= XMLReaderFactory.createXMLReader();
+
+        DocumentBuilderFactory.newInstance();
+
+
+
     }
 
 

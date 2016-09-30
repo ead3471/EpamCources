@@ -79,6 +79,7 @@ public class PropertiesFileReader {
         if(key.length()>0)
             propertiesMap.put(key,value);
     }
+
     public void putFormattedValue(String key,String value, String valueFormat)
     {
         propertiesMap.put(key,String.format(value,valueFormat));
