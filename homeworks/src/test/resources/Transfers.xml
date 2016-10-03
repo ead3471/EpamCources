@@ -13,41 +13,41 @@
 
     <operator>
         <transfer>
-            <form/>1
-            <to/>2
-            <money/>500
+            <from>1</from>
+            <to>2</to>
+            <money>500</money>
         </transfer>
 
         <transfer>
-            <form/>1
-            <to/>2
-            <money/>200
-        </transfer>
-
-
-        <transfer>
-            <form/>1
-            <to/>2
-            <money/>50
-        </transfer>
-
-        <transfer>
-            <form/>1
-            <to/>2
-            <money/>50
-        </transfer>
-
-        <transfer>
-            <form/>1
-            <to/>2
-            <money/>50
+            <from>1</from>
+            <to>2</to>
+            <money>500</money>
         </transfer>
 
 
         <transfer>
-            <form/>1
-            <to/>2
-            <money/>50
+            <from>1</from>
+            <to>2</to>
+            <money>500</money>
+        </transfer>
+
+        <transfer>
+            <from>1</from>
+            <to>2</to>
+            <money>500</money>
+        </transfer>
+
+        <transfer>
+            <from>1</from>
+            <to>2</to>
+            <money>500</money>
+        </transfer>
+
+
+        <transfer>
+            <from>1</from>
+            <to>2</to>
+            <money>500</money>
         </transfer>
 
 
@@ -55,41 +55,41 @@
 
     <operator>
         <transfer>
-            <form/>1
-            <to/>2
-            <money/>500
+            <from>1</from>
+            <to>2</to>
+            <money>500</money>
         </transfer>
 
         <transfer>
-            <form/>1
-            <to/>2
-            <money/>200
-        </transfer>
-
-
-        <transfer>
-            <form/>1
-            <to/>2
-            <money/>50
-        </transfer>
-
-        <transfer>
-            <form/>1
-            <to/>2
-            <money/>50
-        </transfer>
-
-        <transfer>
-            <form/>1
-            <to/>2
-            <money/>50
+            <from>1</from>
+            <to>2</to>
+            <money>500</money>
         </transfer>
 
 
         <transfer>
-            <form/>1
-            <to/>2
-            <money/>50
+            <from>1</from>
+            <to>2</to>
+            <money>500</money>
+        </transfer>
+
+        <transfer>
+            <from>1</from>
+            <to>2</to>
+            <money>500</money>
+        </transfer>
+
+        <transfer>
+            <from>1</from>
+            <to>2</to>
+            <money>500</money>
+        </transfer>
+
+
+        <transfer>
+            <from>1</from>
+            <to>2</to>
+            <money>500</money>
         </transfer>
 
 

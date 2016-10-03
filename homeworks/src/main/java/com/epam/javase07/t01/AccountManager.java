@@ -41,8 +41,6 @@ public class AccountManager {
             }
         }
 
-
-
         NodeList operators=xmlDocument.getElementsByTagName("operator");
 
         List<List<MoneyTransferInfo>> moneyTransferOperatorsTasks=new ArrayList<>();
@@ -55,7 +53,8 @@ public class AccountManager {
             for(int i=0;i<transfers.getLength();i++)
             {
                 Node currentNode=transfers.item(i);
-                if(currentNode.getNodeType()==Node.ELEMENT_NODE&& currentNode.getLocalName()=="transfer") {
+                if(currentNode.getNodeType()==Node.ELEMENT_NODE&& currentNode.getNodeName()=="transfer") {
+
                     int fromAccountId= Integer.parseInt((((Element)(currentNode)).getElementsByTagName("from")).item(0).getTextContent());
                     int toAccountId= Integer.parseInt((((Element)(currentNode)).getElementsByTagName("to")).item(0).getTextContent());
                     double moneyForTransfer= Double.parseDouble((((Element)(currentNode)).getElementsByTagName("money")).item(0).getTextContent());
@@ -97,7 +96,16 @@ public class AccountManager {
        }
     }
 
-    public void doTransferWithLock(Account from,Account to) throws InsufficientFundsException{
+    public void doTransferWithoutSynchronization(Account from, Account to, double money) throws InsufficientFundsException {
+
+        from.withdraw(money);
+        to.deposit(money);
+
+    }
+
+
+
+    public void doTransferWithLock(Account from,Account to,double money) throws InsufficientFundsException{
 
 
 
@@ -126,8 +134,20 @@ class Account
 
     }
 
+    public double getDepositMoney() {
+        return depositMoney;
+    }
+
     public int getAccountId() {
         return accountId;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "accountId=" + accountId +
+                ", depositMoney=" + depositMoney +
+                '}';
     }
 }
 
@@ -143,4 +163,10 @@ class MoneyTransferInfo {
     Account to;
     double money;
 
+    @Override
+    public String toString() {
+        return "("+from.getAccountId() +
+                "->" + to.getAccountId() +
+                " money=" + money+")";
+    }
 }
