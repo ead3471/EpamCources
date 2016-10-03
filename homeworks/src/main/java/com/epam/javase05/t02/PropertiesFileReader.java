@@ -39,12 +39,30 @@ public class PropertiesFileReader {
             return loadedProperties;
     }
 
-    public int getInt(String key,int defaultValue)
+    public int getInt(String key) throws  NoSuchKeyException
     {
-        if(!propertiesMap.containsKey(key))
-            return defaultValue;
-        return
-                Integer.parseInt(propertiesMap.get(key));
+        if(this.propertiesMap.containsKey(key))
+            return Integer.parseInt(propertiesMap.get(key));
+
+        throw new NoSuchKeyException("No such key:"+key);
+    }
+
+
+    public int getInt(String key, int defaultValue)
+    {
+        if(this.propertiesMap.containsKey(key))
+            return Integer.parseInt(propertiesMap.get(key));
+        return defaultValue;
+
+
+    }
+
+    public double getDouble(String key) throws NoSuchKeyException
+    {
+
+        if(propertiesMap.containsKey(key))
+                  return Double.parseDouble(propertiesMap.get(key));
+        throw new NoSuchKeyException("No such key:"+key);
     }
 
     public double getDouble(String key, double defaultValue)
@@ -56,6 +74,13 @@ public class PropertiesFileReader {
                 Double.parseDouble(propertiesMap.get(key));
     }
 
+    public float getFloat(String key) throws NoSuchKeyException {
+
+        if(propertiesMap.containsKey(key))
+            return Float.parseFloat(propertiesMap.get(key));
+        throw new NoSuchKeyException("No such key:"+key);
+    }
+
     public float getFloat(String key, float defaultValue)
     {
 
@@ -63,6 +88,13 @@ public class PropertiesFileReader {
             return defaultValue;
         return
                 Float.parseFloat(propertiesMap.get(key));
+    }
+
+    public String getString(String key) throws NoSuchKeyException {
+
+        if(propertiesMap.containsKey(key))
+           return propertiesMap.get(key);
+        throw new NoSuchKeyException("No such key:"+key);
     }
 
     public String getString(String key, String defaultValue)

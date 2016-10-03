@@ -1,5 +1,6 @@
 package com.epam.javase05.t02;
 
+
 import org.junit.Test;
 
 import java.io.File;
@@ -16,7 +17,7 @@ import static org.junit.Assert.*;
 public class PropertiesFileReaderTest {
     @Test
     public void saveTester() throws IOException {
-        final String savePropertiesFileName="src/test/resources/TestProperties.properties";
+        final String savePropertiesFileName="/src/test/resources/TestProperties.properties";
         PropertiesFileReader reader = new PropertiesFileReader();
         Map<String, String> randomPropertiesMap = createRandomMap(150);
         for (String key : randomPropertiesMap.keySet()) {
@@ -53,4 +54,17 @@ public class PropertiesFileReaderTest {
 
         return builder.toString();
     }
+
+    @Test(expected = NoSuchKeyException.class)
+    public void testNoSuchKeyException() throws NoSuchKeyException {
+        PropertiesFileReader reader=new PropertiesFileReader();
+        reader.put("SomeKey","SomeValue");
+        reader.getString("SomeOverKey");
+    }
+
+    @Test(expected=IOException.class)
+    public void testLoadFromFile() throws IOException {
+        PropertiesFileReader reader=PropertiesFileReader.loadFromFile("nosuchfile.properties");
+    }
+
 }

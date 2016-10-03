@@ -47,9 +47,7 @@ public class CommandAgrs  {
         System.out.println(System.in.read());
 
 
-        XMLReader reader= XMLReaderFactory.createXMLReader();
 
-        DocumentBuilderFactory.newInstance();
 
 
 

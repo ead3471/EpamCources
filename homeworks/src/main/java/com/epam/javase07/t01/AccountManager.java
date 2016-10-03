@@ -1,5 +1,18 @@
 package com.epam.javase07.t01;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -11,12 +24,57 @@ import java.util.List;
  */
 public class AccountManager {
 
-    public List<MoneyTransferInfo> readAccountsTransferInfo()
-    {
-        return  null;
+
+    public List<List<MoneyTransferInfo>> readAccountsTransferInfo(String accountsInfo) throws ParserConfigurationException, IOException, SAXException {
+
+        Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(accountsInfo));
+        NodeList accounts=xmlDocument.getElementsByTagName("account");
+
+        HashMap<Integer,Account> loadedAccounts=new HashMap<>();
+        for(int i=0;i<accounts.getLength();i++)
+        {
+            Node currentNode=accounts.item(i);
+            if(currentNode.getNodeType()==Node.ELEMENT_NODE){
+                int accountId= Integer.parseInt(((Element)(accounts.item(i))).getAttribute("id"));
+                double moneyAmount=Double.parseDouble(((Element)(accounts.item(i))).getAttribute("moneyAmount"));
+                loadedAccounts.put(accountId,new Account(accountId,moneyAmount));
+            }
+        }
+
+
+
+        NodeList operators=xmlDocument.getElementsByTagName("operator");
+
+        List<List<MoneyTransferInfo>> moneyTransferOperatorsTasks=new ArrayList<>();
+
+        for(int operatorsCount=0;operatorsCount<operators.getLength();operatorsCount++) {
+
+
+            ArrayList<MoneyTransferInfo> currentOperatorTasks=new ArrayList<>();
+            NodeList transfers=((Element)(operators.item(operatorsCount))).getElementsByTagName("transfer");
+            for(int i=0;i<transfers.getLength();i++)
+            {
+                Node currentNode=transfers.item(i);
+                if(currentNode.getNodeType()==Node.ELEMENT_NODE&& currentNode.getLocalName()=="transfer") {
+                    int fromAccountId= Integer.parseInt((((Element)(currentNode)).getElementsByTagName("from")).item(0).getTextContent());
+                    int toAccountId= Integer.parseInt((((Element)(currentNode)).getElementsByTagName("to")).item(0).getTextContent());
+                    double moneyForTransfer= Double.parseDouble((((Element)(currentNode)).getElementsByTagName("money")).item(0).getTextContent());
+
+                    if(loadedAccounts.containsKey(fromAccountId)&&loadedAccounts.containsKey(toAccountId))
+                    {
+                        currentOperatorTasks.add(new MoneyTransferInfo(loadedAccounts.get(fromAccountId),loadedAccounts.get(toAccountId),moneyForTransfer));
+                    }
+                }
+            }
+            System.out.println("operator "+operatorsCount+":"+"\n       "+currentOperatorTasks);
+            moneyTransferOperatorsTasks.add(currentOperatorTasks);
+        }
+
+
+        return moneyTransferOperatorsTasks;
     }
 
-    public void doTransfer(Account from,Account to, double money) throws InsufficientFundsException {
+    public void doTransferWithSynchronized(Account from,Account to, double money) throws InsufficientFundsException {
       if(from.getAccountId()<to.getAccountId()){
            synchronized (from)
            {
@@ -37,9 +95,14 @@ public class AccountManager {
                }
            }
        }
+    }
+
+    public void doTransferWithLock(Account from,Account to) throws InsufficientFundsException{
+
 
 
     }
+
 }
 class Account
 {

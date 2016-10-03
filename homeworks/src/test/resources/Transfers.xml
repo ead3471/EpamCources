@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<transfer_info>
+    <account id="1" moneyAmount="1000"/>
+    <account id="2" moneyAmount="1000"/>
+    <account id="3" moneyAmount="1000"/>
+    <account id="4" moneyAmount="1000"/>
+    <account id="5" moneyAmount="1000"/>
+    <account id="6" moneyAmount="1000"/>
+    <account id="7" moneyAmount="1000"/>
+    <account id="8" moneyAmount="1000"/>
+    <account id="9" moneyAmount="1000"/>
+
+
+    <operator>
+        <transfer>
+            <form/>1
+            <to/>2
+            <money/>500
+        </transfer>
+
+        <transfer>
+            <form/>1
+            <to/>2
+            <money/>200
+        </transfer>
+
+
+        <transfer>
+            <form/>1
+            <to/>2
+            <money/>50
+        </transfer>
+
+        <transfer>
+            <form/>1
+            <to/>2
+            <money/>50
+        </transfer>
+
+        <transfer>
+            <form/>1
+            <to/>2
+            <money/>50
+        </transfer>
+
+
+        <transfer>
+            <form/>1
+            <to/>2
+            <money/>50
+        </transfer>
+
+
+    </operator>
+
+    <operator>
+        <transfer>
+            <form/>1
+            <to/>2
+            <money/>500
+        </transfer>
+
+        <transfer>
+            <form/>1
+            <to/>2
+            <money/>200
+        </transfer>
+
+
+        <transfer>
+            <form/>1
+            <to/>2
+            <money/>50
+        </transfer>
+
+        <transfer>
+            <form/>1
+            <to/>2
+            <money/>50
+        </transfer>
+
+        <transfer>
+            <form/>1
+            <to/>2
+            <money/>50
+        </transfer>
+
+
+        <transfer>
+            <form/>1
+            <to/>2
+            <money/>50
+        </transfer>
+
+
+    </operator>
+
+
+
+</transfer_info>
