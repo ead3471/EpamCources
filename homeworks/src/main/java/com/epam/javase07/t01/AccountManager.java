@@ -12,8 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Freemind on 2016-09-29.
@@ -22,10 +22,9 @@ import java.util.List;
  * (счета в приложении представляются собой объекты). Синхронизируйте код приложения
  * используя ключевое слово synchronized (1 вариант) и библиотеку java.util.concurrent (2 вариант).
  */
-public class AccountManager {
+public abstract class AccountManager {
 
-
-    public List<List<MoneyTransferInfo>> readAccountsTransferInfo(String accountsInfo) throws ParserConfigurationException, IOException, SAXException {
+    public List<List<TransferInfo>> readAccountsTransferInfo(String accountsInfo) throws ParserConfigurationException, IOException, SAXException {
 
         Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(accountsInfo));
         NodeList accounts=xmlDocument.getElementsByTagName("account");
@@ -43,12 +42,12 @@ public class AccountManager {
 
         NodeList operators=xmlDocument.getElementsByTagName("operator");
 
-        List<List<MoneyTransferInfo>> moneyTransferOperatorsTasks=new ArrayList<>();
+        List<List<TransferInfo>> moneyTransferOperatorsTasks=new ArrayList<>();
 
         for(int operatorsCount=0;operatorsCount<operators.getLength();operatorsCount++) {
 
 
-            ArrayList<MoneyTransferInfo> currentOperatorTasks=new ArrayList<>();
+            ArrayList<TransferInfo> currentOperatorTasks=new ArrayList<>();
             NodeList transfers=((Element)(operators.item(operatorsCount))).getElementsByTagName("transfer");
             for(int i=0;i<transfers.getLength();i++)
             {
@@ -61,7 +60,7 @@ public class AccountManager {
 
                     if(loadedAccounts.containsKey(fromAccountId)&&loadedAccounts.containsKey(toAccountId))
                     {
-                        currentOperatorTasks.add(new MoneyTransferInfo(loadedAccounts.get(fromAccountId),loadedAccounts.get(toAccountId),moneyForTransfer));
+                        currentOperatorTasks.add(new TransferInfo(loadedAccounts.get(fromAccountId),loadedAccounts.get(toAccountId),moneyForTransfer));
                     }
                 }
             }
@@ -73,100 +72,73 @@ public class AccountManager {
         return moneyTransferOperatorsTasks;
     }
 
-    public void doTransferWithSynchronized(Account from,Account to, double money) throws InsufficientFundsException {
-      if(from.getAccountId()<to.getAccountId()){
-           synchronized (from)
-           {
-               synchronized (to)
-               {
-                    from.withdraw(money);
-                    to.deposit(money);
-               }
-           }
-       }
-       else{
-           synchronized (to)
-           {
-               synchronized (from)
-               {
-                   from.withdraw(money);
-                   to.deposit(money);
-               }
-           }
-       }
+
+    abstract void doMoneyTransfer(Account from, Account to, double money) throws InsufficientFundsException;
+
+    public static class NotSynchronizedManager extends AccountManager {
+        @Override
+        void doMoneyTransfer(Account from, Account to, double money) throws InsufficientFundsException {
+
+
+                from.withdraw(money);
+                to.deposit(money);
+
+            }
+
+        }
+
+    public static class SynchronizedManager extends AccountManager {
+        @Override
+        void doMoneyTransfer(Account from, Account to, double money) throws InsufficientFundsException{
+            if(from.getAccountId()<to.getAccountId()){
+                synchronized (from)
+                {
+                    synchronized (to)
+                    {
+                        from.withdraw(money);
+                        to.deposit(money);
+                    }
+                }
+            }
+            else{
+                synchronized (to)
+                {
+                    synchronized (from)
+                    {
+                        from.withdraw(money);
+                        to.deposit(money);
+                    }
+                }
+            }
+        }
     }
 
-    public void doTransferWithoutSynchronization(Account from, Account to, double money) throws InsufficientFundsException {
+    public static class SynchronizedWithLockManager extends AccountManager{
 
-        from.withdraw(money);
-        to.deposit(money);
+        @Override
+        void doMoneyTransfer(Account from, Account to, double money) throws InsufficientFundsException {
+            boolean transferIsDone=true;
 
-    }
+            while(!transferIsDone)
+            {
+                if(from.getAccountLock().tryLock())
+                {
+                    if(to.getAccountLock().tryLock())
+                    {
+                        try {
+                            from.withdraw(money);
+                            to.deposit(money);
+                        }
+                        finally {
+                            transferIsDone=true;
+                        }
+                    }
+                }
+            }
 
-
-
-    public void doTransferWithLock(Account from,Account to,double money) throws InsufficientFundsException{
-
-
-
-    }
-
-}
-class Account
-{
-    private final int accountId;
-    private double depositMoney =0;
-
-    public Account(int accountId,double startingMoney) {
-        this.depositMoney = startingMoney;
-        this.accountId=accountId;
-    }
-
-    public void deposit(double money)
-    {
-        depositMoney +=money;
-    }
-
-    public void withdraw(double money) throws InsufficientFundsException {
-        if(depositMoney <money)
-            throw new InsufficientFundsException();
-        depositMoney -=money;
-
-    }
-
-    public double getDepositMoney() {
-        return depositMoney;
-    }
-
-    public int getAccountId() {
-        return accountId;
-    }
-
-    @Override
-    public String toString() {
-        return "Account{" +
-                "accountId=" + accountId +
-                ", depositMoney=" + depositMoney +
-                '}';
+        }
     }
 }
 
-class MoneyTransferInfo {
 
-    public MoneyTransferInfo(Account from, Account to, double money) {
-        this.from = from;
-        this.to = to;
-        this.money = money;
-    }
 
-    Account from;
-    Account to;
-    double money;
-
-    @Override
-    public String toString() {
-        return "("+from.getAccountId() +
-                "->" + to.getAccountId() +
-                " money=" + money+")";
-    }
-}

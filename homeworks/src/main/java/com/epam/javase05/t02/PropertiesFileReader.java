@@ -6,10 +6,7 @@ import java.nio.file.Paths;
 import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by Freemind on 2016-09-26.
@@ -19,7 +16,7 @@ import java.util.Properties;
  */
 public class PropertiesFileReader {
 
-    HashMap<String,String> propertiesMap=new HashMap<>();
+    protected Map<String,String> propertiesMap=new HashMap<>();
     public static final String PROPERTIES_DELIMITER="=";
 
     public static PropertiesFileReader loadFromFile(String filePath) throws IOException {

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <transfer_info>
     <account id="1" moneyAmount="1000"/>
-    <account id="2" moneyAmount="1000"/>
-    <account id="3" moneyAmount="1000"/>
-    <account id="4" moneyAmount="1000"/>
-    <account id="5" moneyAmount="1000"/>
-    <account id="6" moneyAmount="1000"/>
-    <account id="7" moneyAmount="1000"/>
-    <account id="8" moneyAmount="1000"/>
-    <account id="9" moneyAmount="1000"/>
+    <account id="2" moneyAmount="10"/>
+    <account id="3" moneyAmount="100"/>
+    <account id="4" moneyAmount="120"/>
+    <account id="5" moneyAmount="1500"/>
+    <account id="6" moneyAmount="1"/>
+    <account id="7" moneyAmount="0"/>
+    <account id="8" moneyAmount="200"/>
+    <account id="9" moneyAmount="10000"/>
 
 
     <operator>
@@ -19,34 +19,34 @@
         </transfer>
 
         <transfer>
-            <from>1</from>
-            <to>2</to>
+            <from>2</from>
+            <to>1</to>
             <money>500</money>
         </transfer>
 
 
         <transfer>
             <from>1</from>
-            <to>2</to>
+            <to>3</to>
             <money>500</money>
         </transfer>
 
         <transfer>
-            <from>1</from>
-            <to>2</to>
+            <from>5</from>
+            <to>9</to>
             <money>500</money>
         </transfer>
 
         <transfer>
-            <from>1</from>
+            <from>3</from>
             <to>2</to>
             <money>500</money>
         </transfer>
 
 
         <transfer>
-            <from>1</from>
-            <to>2</to>
+            <from>9</from>
+            <to>1</to>
             <money>500</money>
         </transfer>
 
@@ -62,33 +62,33 @@
 
         <transfer>
             <from>1</from>
+            <to>8</to>
+            <money>200</money>
+        </transfer>
+
+
+        <transfer>
+            <from>8</from>
             <to>2</to>
-            <money>500</money>
+            <money>1000</money>
+        </transfer>
+
+        <transfer>
+            <from>7</from>
+            <to>5</to>
+            <money>100</money>
+        </transfer>
+
+        <transfer>
+            <from>2</from>
+            <to>5</to>
+            <money>7000</money>
         </transfer>
 
 
         <transfer>
             <from>1</from>
-            <to>2</to>
-            <money>500</money>
-        </transfer>
-
-        <transfer>
-            <from>1</from>
-            <to>2</to>
-            <money>500</money>
-        </transfer>
-
-        <transfer>
-            <from>1</from>
-            <to>2</to>
-            <money>500</money>
-        </transfer>
-
-
-        <transfer>
-            <from>1</from>
-            <to>2</to>
+            <to>6</to>
             <money>500</money>
         </transfer>
 
