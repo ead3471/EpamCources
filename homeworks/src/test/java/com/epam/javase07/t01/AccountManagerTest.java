@@ -7,9 +7,7 @@ import java.util.concurrent.*;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by Freemind on 2016-10-02.
- */
+
 public class AccountManagerTest {
 
 
@@ -32,64 +30,50 @@ public class AccountManagerTest {
 
 
     private void testAccountManagerByRandom(AccountManager manager) throws InterruptedException {
-        final int accountsMaxNumber=2;
-        final int operatorsNumber=15;
-        final int operatorTransfersMaxNumber=15;
-        List<Account> generatedAccounts=generateAccounts(accountsMaxNumber);
-
-        List<TransferInfo> generatedTransfers= generateTransfers(generatedAccounts,operatorTransfersMaxNumber);
-
-       // doAllOperationsAndTestResult(manager,generatedAccounts,generatedTransfers,operatorsMaxNumber);
+        final int accountsNumber=20;
+        final int operatorsNumber=100;
+        final int operatorTransfersNumber=1000_000;
+        List<Account> generatedAccounts=generateAccounts(accountsNumber);
+        List<TransferInfo> generatedTransfers= generateTransfers(generatedAccounts,operatorTransfersNumber);
         doAllOperationsByQueue(manager,generatedAccounts,generatedTransfers,operatorsNumber);
-
     }
 
 
     private void doAllOperationsByQueue(AccountManager manager, List<Account> accounts,List<TransferInfo> transfers, int workingThreadsNumber) throws InterruptedException {
-        BlockingQueue<TransferInfo> transfersQueue=new ArrayBlockingQueue<>(transfers.size()) ;
+        BlockingQueue<TransferInfo> transfersQueue=new LinkedBlockingDeque<>(transfers.size()) ;
         transfersQueue.addAll(transfers);
         ExecutorService executor=Executors.newCachedThreadPool();
         double sumMoneyBeforeOperations= getAccountsSumMoney(accounts);
         CountDownLatch latch=new CountDownLatch(workingThreadsNumber);
         for(;workingThreadsNumber-->0;)
         {
-            executor.submit(new Runnable() {
-                @Override
-                public void run() {
-
-                    TransferInfo transfer;
-                    while((transfer=transfersQueue.poll())!=null)
-
-                    {
-                       // System.out.println(Thread.currentThread().getName()+"get transfer"+transfer);
-                        try {
-                            manager.doMoneyTransfer(transfer.from,transfer.to,transfer.money);
-                        } catch (InsufficientFundsException e) {
-                          //  System.out.println(e);
-                        }
+            executor.submit(() -> {
+                TransferInfo transfer;
+                while((transfer=transfersQueue.poll())!=null)
+                {
+                    try {
+                        manager.doMoneyTransfer(transfer.from,transfer.to,transfer.money);
+                    } catch (InsufficientFundsException e) {
 
                     }
-
-                    latch.countDown();
-                 //   System.out.println("countdown:"+latch.getCount());
+                    catch(Exception ex)
+                    {
+                        System.out.println(transfer+" "+ex);
+                    }
                 }
+                latch.countDown();
             });
         }
 
         latch.await();
-        double sumMoneyAfterOperations= getAccountsSumMoney(accounts);
+
+        double sumMoneyAfterOperations=getAccountsSumMoney(accounts);
         assertTrue(Math.abs(sumMoneyBeforeOperations-sumMoneyAfterOperations)<0.000000001);
         for(Account account:accounts)
         {
             assertTrue(account.getDepositMoney()>0);
         }
     }
-
-
-
-
-
-
 
     private double getAccountsSumMoney(List<Account> accounts)
     {
@@ -103,16 +87,15 @@ public class AccountManagerTest {
     }
 
 
-    private List<Account> generateAccounts(int accountsMaxNumber)
+    private List<Account> generateAccounts(int accountsNumber)
     {
         Random rnd=new Random();
-        int numberOfAccounts=/*rnd.nextInt(accountsMaxNumber)+*/accountsMaxNumber;
         ArrayList<Account> accounts = new ArrayList<>();
 
-        while(numberOfAccounts-->0)
+        while(accountsNumber-->0)
         {
             double accountMoney=rnd.nextDouble()*5000;
-            accounts.add(new Account(numberOfAccounts,accountMoney));
+            accounts.add(new Account(accountsNumber,accountMoney));
 
         }
        return accounts;
@@ -120,8 +103,7 @@ public class AccountManagerTest {
     private  List<TransferInfo> generateTransfers(List<Account> accounts, int transfersOperatorsNumber) {
         Random rnd=new Random();
 
-       // int numberOfOperatorsTransactions=/*rnd.nextInt(operatorTransfersMaxNumber)+*/operatorTransfersMaxNumber;
-        List<TransferInfo> transfers=new ArrayList<>();
+         List<TransferInfo> transfers=new ArrayList<>();
             while(transfersOperatorsNumber-->0)
             {
 
