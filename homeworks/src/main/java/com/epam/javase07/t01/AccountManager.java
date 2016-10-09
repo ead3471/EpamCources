@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -80,8 +81,7 @@ public abstract class AccountManager {
         void doMoneyTransfer(Account from, Account to, double money) throws InsufficientFundsException {
 
 
-                from.withdraw(money);
-                to.deposit(money);
+            doUnsafeTransfer(from, to, money);
 
             }
 
@@ -95,8 +95,7 @@ public abstract class AccountManager {
                 {
                     synchronized (to)
                     {
-                        from.withdraw(money);
-                        to.deposit(money);
+                        doUnsafeTransfer(from, to, money);
                     }
                 }
             }
@@ -105,39 +104,97 @@ public abstract class AccountManager {
                 {
                     synchronized (from)
                     {
-                        from.withdraw(money);
-                        to.deposit(money);
+                        doUnsafeTransfer(from, to, money);
                     }
                 }
             }
         }
     }
 
-    public static class SynchronizedWithLockManager extends AccountManager{
-
+    public static class SynchronizedWithLockManager extends AccountManager {
         @Override
         void doMoneyTransfer(Account from, Account to, double money) throws InsufficientFundsException {
-            boolean transferIsDone=true;
+            boolean transferIsDone = false;
 
-            while(!transferIsDone)
-            {
-                if(from.getAccountLock().tryLock())
-                {
-                    if(to.getAccountLock().tryLock())
-                    {
-                        try {
-                            from.withdraw(money);
-                            to.deposit(money);
-                        }
-                        finally {
+          //  System.out.println("start process transfer:" + from.getAccountId() + "->" + to.getAccountId() + " " + money);
+            while (!transferIsDone) {
+                if (from.getAccountLock().tryLock()) {
+                    try {
+                        if (to.getAccountLock().tryLock()) {
                             transferIsDone=true;
+                            doUnsafeTransfer(from, to, money);
                         }
                     }
+                    finally {
+                        synchronized (this)
+                        {
+                            from.getAccountLock().unlock();
+                            to.getAccountLock().unlock();
+
+                        }
+
+
+                    }
+                }
+
                 }
             }
-
         }
+//                try {
+//                    if (from.getAccountLock().tryLock() && to.getAccountLock().tryLock()) {
+//                        System.out.println("take all lock for " + from.getAccountId() + "->" + to.getAccountId() + " "+money+" thread" + Thread.currentThread().getName());
+//                        doUnsafeTransfer(from, to, money);
+//                        System.out.println("transfer " + from.getAccountId() + "->" + to.getAccountId() +" "+money+ "  is done");
+//
+//
+//                        //    System.out.println("transfer " + from.getAccountId() + "->" + to.getAccountId() + ex);
+//                    }
+//                }
+//
+//                    finally{
+//                          System.out.println("unlock From:"+from.getAccountId()+ " transfer:"+from.getAccountId() + "->" + to.getAccountId()+" "+money);
+//                        from.getAccountLock().unlock();
+//                        System.out.println("unlock to:"+to.getAccountId()+from.getAccountId()+ " transfer:"+from.getAccountId() + "->" + to.getAccountId()+" "+money);
+//                        to.getAccountLock().unlock();
+//                        // System.out.println("here2");
+//                        transferIsDone = true;
+//                        //  from.getAccountLock().notifyAll();
+//                        // to.getAccountLock().notifyAll();
+//
+//                    }
+//
+//
+//            }
+//
+//            System.out.println("exit while for transaction:"+from.getAccountId()+"->"+to.getAccountId()+" "+money);
+
+       // }
+    //}
+
+    protected void doUnsafeTransfer(Account from, Account to, double money) throws InsufficientFundsException {
+    //    doSomething();
+        from.withdraw(money);
+  //      doSomething();
+        to.deposit(money);
+     //  doSomething();
     }
+
+
+    protected void doSomething()
+    {
+        Random rnd=new Random();
+        if(rnd.nextBoolean()){
+            try {
+                Thread.sleep(rnd.nextInt(50));
+            } catch (InterruptedException e) {
+
+            }
+        }
+        else
+            Thread.yield();
+
+    }
+
 }
 
 
