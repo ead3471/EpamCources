@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 public class PropertiesFileReaderTest {
     @Test
     public void saveTester() throws IOException {
-        final String savePropertiesFileName="/src/test/resources/TestProperties.properties";
+        final String savePropertiesFileName="src/test/resources/TestProperties.properties";
         PropertiesFileReader reader = new PropertiesFileReader();
         Map<String, String> randomPropertiesMap = createRandomMap(150);
         for (String key : randomPropertiesMap.keySet()) {
@@ -27,11 +27,13 @@ public class PropertiesFileReaderTest {
         String saveFileName = savePropertiesFileName;
         reader.save(saveFileName);
 
-        PropertiesFileReader uploadedReader = PropertiesFileReader.loadFromFile(saveFileName);
 
-        new File(savePropertiesFileName).delete();
+        PropertiesFileReader propertiesReader = new PropertiesFileReader();
+                propertiesReader.load(saveFileName);
 
-        assertTrue(uploadedReader.equals(reader));
+         new File(savePropertiesFileName).delete();
+
+        assertTrue(propertiesReader.equals(reader));
 
     }
 
@@ -64,7 +66,9 @@ public class PropertiesFileReaderTest {
 
     @Test(expected=IOException.class)
     public void testLoadFromFile() throws IOException {
-        PropertiesFileReader reader=PropertiesFileReader.loadFromFile("nosuchfile.properties");
+
+        PropertiesFileReader reader=new PropertiesFileReader();
+        reader.load("nosuchfile.properties");
     }
 
 }

@@ -51,4 +51,26 @@ class Account
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Account account = (Account) o;
+
+        return (getAccountId() == account.getAccountId());
+
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = getAccountId();
+        temp = Double.doubleToLongBits(getDepositMoney());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (getAccountLock() != null ? getAccountLock().hashCode() : 0);
+        return result;
+    }
 }

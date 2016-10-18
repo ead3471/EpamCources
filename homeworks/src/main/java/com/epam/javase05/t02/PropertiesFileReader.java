@@ -19,9 +19,9 @@ public class PropertiesFileReader {
     protected Map<String,String> propertiesMap=new HashMap<>();
     public static final String PROPERTIES_DELIMITER="=";
 
-    public static PropertiesFileReader loadFromFile(String filePath) throws IOException {
+    public  void load(String filePath) throws IOException {
             List<String> fileLines=Files.readAllLines(Paths.get(filePath));
-            PropertiesFileReader loadedProperties=new PropertiesFileReader();
+
 
             for(String fileLine:fileLines)
             {
@@ -30,10 +30,9 @@ public class PropertiesFileReader {
                 {
                     continue;
                 }
-                loadedProperties.propertiesMap.put(fileLine.substring(0,indexOfDelimiter),fileLine.substring(indexOfDelimiter+1,fileLine.length()));
+                propertiesMap.put(fileLine.substring(0,indexOfDelimiter),fileLine.substring(indexOfDelimiter+1,fileLine.length()));
             }
 
-            return loadedProperties;
     }
 
     public int getInt(String key) throws  NoSuchKeyException

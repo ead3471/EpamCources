@@ -1,20 +1,18 @@
 package com.epam.javase07.t01;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
+
+
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+
 
 /**
  * В текстовом (или xml) файле содержится информация о переводах средств со счета на
@@ -24,52 +22,34 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class AccountManager {
 
-    public List<List<TransferInfo>> readAccountsTransferInfo(String accountsInfo) throws ParserConfigurationException, IOException, SAXException {
 
-        Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(accountsInfo));
-        NodeList accounts = xmlDocument.getElementsByTagName("account");
+    protected void doUnsafeTransfer(Account from, Account to, double money) throws InsufficientFundsException {
+        //    doSomething();
+        from.withdraw(money);
+        // doSomething();
+        to.deposit(money);
+        //  doSomething();
+    }
 
-        HashMap<Integer, Account> loadedAccounts = new HashMap<>();
-        for (int i = 0; i < accounts.getLength(); i++) {
-            Node currentNode = accounts.item(i);
-            if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
-                int accountId = Integer.parseInt(((Element) (accounts.item(i))).getAttribute("id"));
-                double moneyAmount = Double.parseDouble(((Element) (accounts.item(i))).getAttribute("moneyAmount"));
-                loadedAccounts.put(accountId, new Account(accountId, moneyAmount));
+    protected void doSomething() {
+        Random rnd = new Random();
+        if (rnd.nextBoolean()) {
+            try {
+                Thread.sleep(rnd.nextInt(50));
+            } catch (InterruptedException e) {
+
             }
-        }
-
-        NodeList operators = xmlDocument.getElementsByTagName("operator");
-
-        List<List<TransferInfo>> moneyTransferOperatorsTasks = new ArrayList<>();
-
-        for (int operatorsCount = 0; operatorsCount < operators.getLength(); operatorsCount++) {
-
-
-            ArrayList<TransferInfo> currentOperatorTasks = new ArrayList<>();
-            NodeList transfers = ((Element) (operators.item(operatorsCount))).getElementsByTagName("transfer");
-            for (int i = 0; i < transfers.getLength(); i++) {
-                Node currentNode = transfers.item(i);
-                if (currentNode.getNodeType() == Node.ELEMENT_NODE && currentNode.getNodeName() == "transfer") {
-
-                    int fromAccountId = Integer.parseInt((((Element) (currentNode)).getElementsByTagName("from")).item(0).getTextContent());
-                    int toAccountId = Integer.parseInt((((Element) (currentNode)).getElementsByTagName("to")).item(0).getTextContent());
-                    double moneyForTransfer = Double.parseDouble((((Element) (currentNode)).getElementsByTagName("money")).item(0).getTextContent());
-
-                    if (loadedAccounts.containsKey(fromAccountId) && loadedAccounts.containsKey(toAccountId)) {
-                        currentOperatorTasks.add(new TransferInfo(loadedAccounts.get(fromAccountId), loadedAccounts.get(toAccountId), moneyForTransfer));
-                    }
-                }
-            }
-            System.out.println("operator " + operatorsCount + ":" + "\n       " + currentOperatorTasks);
-            moneyTransferOperatorsTasks.add(currentOperatorTasks);
-        }
-     return moneyTransferOperatorsTasks;
+        } else
+            Thread.yield();
     }
 
     abstract void doMoneyTransfer(Account from, Account to, double money) throws InsufficientFundsException;
 
-    public static class NotSynchronizedManager extends AccountManager {
+    public static AccountManager getNotSynchronizedManager(){return new NotSynchronizedManager();}
+    public static AccountManager getSynchronizedManager(){return new SynchronizedManager();}
+    public static AccountManager getSynchronizedWithLockManager(){return new SynchronizedWithLockManager();}
+
+    private static class NotSynchronizedManager extends AccountManager {
         @Override
         void doMoneyTransfer(Account from, Account to, double money) throws InsufficientFundsException {
 
@@ -79,8 +59,7 @@ public abstract class AccountManager {
         }
 
     }
-
-    public static class SynchronizedManager extends AccountManager {
+    private static class SynchronizedManager extends AccountManager {
         @Override
         void doMoneyTransfer(Account from, Account to, double money) throws InsufficientFundsException {
             if (from.getAccountId() < to.getAccountId()) {
@@ -98,36 +77,7 @@ public abstract class AccountManager {
             }
         }
     }
-
-    public static class SynchronizedWithTryLockManager extends AccountManager {
-        @Override
-        void doMoneyTransfer(Account from, Account to, double money) throws InsufficientFundsException {
-            boolean transferIsDone = false;
-            while (!transferIsDone) {
-                try {
-                    if (from.getAccountLock().tryLock(500, TimeUnit.MILLISECONDS)) {
-                        try {
-                            if (to.getAccountLock().tryLock(500, TimeUnit.MILLISECONDS)) {
-                                try {
-                                    transferIsDone = true;
-                                    doUnsafeTransfer(from, to, money);
-                                } finally {
-                                    to.getAccountLock().unlock();
-                                }
-                            }
-                        } finally {
-                            from.getAccountLock().unlock();
-                        }
-                    }
-                } catch (InterruptedException ex) {
-                    break;
-                }
-            }
-        }
-    }
-
-
-    public static class SynchronizedWithLockManager extends AccountManager {
+    private static class SynchronizedWithLockManager extends AccountManager {
         @Override
         void doMoneyTransfer(Account from, Account to, double money) throws InsufficientFundsException {
 
@@ -152,34 +102,107 @@ public abstract class AccountManager {
         }
     }
 
-    public static void createTransfersInfoXml(List<Account> accounts, List<TransferInfo> transfers, String fileSavePath)
-    {
 
 
 
+
+    public static void createTransfersInfoXml(List<Account> accounts, List<TransferInfo> transfers, String fileSavePath) throws IOException {
+        Element root = new Element("transfers-info");
+
+        Element accountsElement = new Element("accounts");
+        for (Account account : accounts) {
+            accountsElement.addContent(createAccountElement(account));
+        }
+        Element transfersElement = new Element("transfers");
+        for (TransferInfo transfer : transfers) {
+            transfersElement.addContent(createTransferElement(transfer));
+        }
+
+        root.addContent(accountsElement).addContent(transfersElement);
+
+        Document document=new Document(root);
+        XMLOutputter out=new XMLOutputter(Format.getPrettyFormat());
+
+        out.output(document,new FileOutputStream(fileSavePath));
     }
 
+    public static void loadTransfersInfoFromFile(List<Account> accounts,List<TransferInfo> transfers,String fileName) throws JDOMException, IOException {
+        Document document=new SAXBuilder().build(fileName);
+        Element rootElement=document.getRootElement();
 
-    protected void doUnsafeTransfer(Account from, Account to, double money) throws InsufficientFundsException {
-        //    doSomething();
-        from.withdraw(money);
-     doSomething();
-        to.deposit(money);
-        //  doSomething();
-    }
+        List<Element> accountElements=rootElement.getChild("accounts").getChildren("account");
 
+        HashMap<Integer,Account> loadedAccounts=new HashMap();
 
-    protected void doSomething() {
-        Random rnd = new Random();
-        if (rnd.nextBoolean()) {
-            try {
-                Thread.sleep(rnd.nextInt(50));
-            } catch (InterruptedException e) {
+        for (Element accountElement:accountElements) {
+            Account loadedAccount= createAccountFromElement(accountElement);
+            loadedAccounts.put(loadedAccount.getAccountId(),loadedAccount);
+        }
 
+        List<Element> transfersElements=rootElement.getChild("transfers").getChildren("transfer");
+
+        for(Element transferElement:transfersElements){
+            TransferInfo loadedTransfer= createTransferInfoFromElement(transferElement,loadedAccounts);
+            if(loadedTransfer!=null)
+            {
+                transfers.add(loadedTransfer);
             }
-        } else
-            Thread.yield();
+        }
+        accounts.addAll(loadedAccounts.values());
     }
+
+    private static Element createAccountElement(Account account)
+    {
+        Element accountElement=new Element("account");
+        accountElement.setAttribute("id",String.valueOf(account.getAccountId()));
+        accountElement.setAttribute("moneyAmount",String.valueOf(account.getDepositMoney()));
+        return accountElement;
+    }
+
+    private static Element createTransferElement(TransferInfo transfer)
+    {
+        Element transferElement=new Element("transfer");
+
+        Element fromElement=new Element("from");
+        fromElement.addContent(String.valueOf(transfer.from.getAccountId()));
+
+        Element toElement=new Element("to");
+        toElement.addContent(String.valueOf(transfer.to.getAccountId()));
+
+        Element moneyElement=new Element("money");
+        moneyElement.addContent(String.valueOf(transfer.money));
+
+        transferElement.addContent(fromElement).addContent(toElement).addContent(moneyElement);
+
+        return transferElement;
+    }
+
+    private static Account createAccountFromElement(Element accountElement)
+    {
+        int accountID=Integer.parseInt(accountElement.getAttributeValue("id"));
+        double accountMoney=Double.parseDouble(accountElement.getAttributeValue("moneyAmount"));
+        return new Account(accountID,accountMoney);
+    }
+
+    private static TransferInfo createTransferInfoFromElement(Element transferElement, HashMap<Integer,Account> accountsMap)
+    {
+            int fromAccountId= Integer.parseInt(transferElement.getChild("from").getText());
+            Account fromAccount=accountsMap.get(fromAccountId);
+
+            int toAccountId= Integer.parseInt(transferElement.getChild("to").getText());
+            Account toAccount=accountsMap.get(toAccountId);
+
+            double money= Double.parseDouble(transferElement.getChild("money").getText());
+
+        if (fromAccount!=null&& toAccount!=null)
+            return new TransferInfo(fromAccount,toAccount,money);
+        else
+            return null;
+
+    }
+
+
+
 
 }
 

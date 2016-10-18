@@ -1,7 +1,10 @@
 package com.epam.javase07.t01;
 
+import org.jdom2.JDOMException;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -14,27 +17,59 @@ public class AccountManagerTest {
 
     @Test
     public void testNotSynchronizedManager() throws InterruptedException {
-    testAccountManagerByRandom(new AccountManager.NotSynchronizedManager());
+    testAccountManagerByRandom(AccountManager.getNotSynchronizedManager());
     }
 
     @Test
     public void testSynchronizedManager() throws InterruptedException {
-        testAccountManagerByRandom(new AccountManager.SynchronizedManager());
+        testAccountManagerByRandom(AccountManager.getSynchronizedManager());
     }
 
     @Test
     public void testSynchronizedWithLockManager() throws InterruptedException {
-        testAccountManagerByRandom(new AccountManager.SynchronizedWithLockManager());
+        testAccountManagerByRandom(AccountManager.getSynchronizedWithLockManager());
+    }
+
+    @Test
+    public void testWorkWithFile() throws IOException, JDOMException, InterruptedException {
+
+        String fileForXmlSaving = "src/test/resources/Transfers_test.xml";
+        try {
+            List<Account> generatedAccount = generateAccounts(10);
+            List<TransferInfo> generatedTransfers = generateTransfers(generatedAccount, 100_000);
+
+            AccountManager.createTransfersInfoXml(generatedAccount, generatedTransfers, fileForXmlSaving);
+
+            List<Account> loadedAccounts = new ArrayList<>();
+            List<TransferInfo> loadedTransfers = new ArrayList<>();
+            AccountManager.loadTransfersInfoFromFile(loadedAccounts, loadedTransfers, fileForXmlSaving);
+
+            assertTrue(generatedAccount.equals(loadedAccounts));
+            assertTrue(generatedTransfers.equals(loadedTransfers));
+
+
+            int workingThreads = 100;
+
+            doAllOperationsByQueue(AccountManager.getSynchronizedWithLockManager(), loadedAccounts, loadedTransfers, workingThreads);
+        }
+        finally{
+
+            File savedFile=new File(fileForXmlSaving);
+            if(savedFile.exists())
+                savedFile.delete();
+        }
+
     }
 
 
 
     private void testAccountManagerByRandom(AccountManager manager) throws InterruptedException {
-        final int accountsNumber=20;
+        final int accountsNumber=2;
         final int operatorsNumber=100;
         final int operatorTransfersNumber=1000_000;
         List<Account> generatedAccounts=generateAccounts(accountsNumber);
         List<TransferInfo> generatedTransfers= generateTransfers(generatedAccounts,operatorTransfersNumber);
+
         doAllOperationsByQueue(manager,generatedAccounts,generatedTransfers,operatorsNumber);
     }
 
@@ -73,6 +108,7 @@ public class AccountManagerTest {
         {
             assertTrue(account.getDepositMoney()>0);
         }
+
     }
 
     private double getAccountsSumMoney(List<Account> accounts)
@@ -92,10 +128,11 @@ public class AccountManagerTest {
         Random rnd=new Random();
         ArrayList<Account> accounts = new ArrayList<>();
 
-        while(accountsNumber-->0)
+        int currentAccountId=0;
+        while(currentAccountId++<=accountsNumber)
         {
             double accountMoney=rnd.nextDouble()*5000;
-            accounts.add(new Account(accountsNumber,accountMoney));
+            accounts.add(new Account(currentAccountId,accountMoney));
 
         }
        return accounts;
@@ -104,6 +141,7 @@ public class AccountManagerTest {
         Random rnd=new Random();
 
          List<TransferInfo> transfers=new ArrayList<>();
+
             while(transfersOperatorsNumber-->0)
             {
 
