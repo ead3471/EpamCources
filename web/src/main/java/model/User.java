@@ -29,4 +29,7 @@ public class User {
         return passwordHash;
     }
 
+    public String getRole() {
+        return userRole;
+    }
 }

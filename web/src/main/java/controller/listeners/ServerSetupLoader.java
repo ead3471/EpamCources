@@ -1,6 +1,7 @@
 package controller.listeners;
 
 import dao.UserDao;
+import model.RolesInspector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,6 +30,7 @@ public class ServerSetupLoader implements ServletContextListener {
     private final String DB_INIT_SCRIPT_KEY="initBaseFromFileScript";
 
     private final String USER_DAO_KEY="userDao";
+    private final String ROLES_INSPECTOR_KEY="rolesInspector";
 
 
     @Override
@@ -37,6 +39,7 @@ public class ServerSetupLoader implements ServletContextListener {
             ConnectionPool connectionPool=initConnectionPool(sce.getServletContext());
             initBase(sce.getServletContext(),connectionPool);
             initDAO(connectionPool,sce.getServletContext());
+            initRolesInspector(sce);
         } catch (Exception e) {
             logger.warn("Error during connection pool init",e);
         }
@@ -65,6 +68,10 @@ public class ServerSetupLoader implements ServletContextListener {
                 ConnectionPool.executeSQLFromFile(servletContext.getRealPath("/WEB-INF/classes/")+initBaseFile,con);
             }
         }
+    }
+
+    private void initRolesInspector(ServletContextEvent sce){
+        sce.getServletContext().setAttribute(ROLES_INSPECTOR_KEY, RolesInspector.getMockRolesInspector());
     }
 
 

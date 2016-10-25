@@ -1,6 +1,7 @@
 package controller.filters;
 
 import dao.UserDao;
+import model.RolesInspector;
 import model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +19,16 @@ import java.util.Optional;
 public class AuthFilter extends HttpFilter {
     private final static Logger logger = LogManager.getLogger(AuthFilter.class);
     private final static String LOGIN_PAGE = "/login.jsp";
+    private UserDao userDao;
+    private RolesInspector rolesInspector;
+
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        ServletContext servletContext = filterConfig.getServletContext();
+        userDao = (UserDao) servletContext.getAttribute("userDao");
+        rolesInspector=(RolesInspector) servletContext.getAttribute("rolesInspector");
+    }
 
 
     private void setUserAfterLoginUrl(HttpServletRequest request, HttpSession session){
@@ -38,18 +49,18 @@ public class AuthFilter extends HttpFilter {
         HttpSession session = request.getSession();
 
         setUserAfterLoginUrl(request,session);
-        if (userIsLoggedIn(session) && userRequestIsValid(session, request)
-                || tryAuthoriseUser(session, request)) {
+        if (userIsLoggedIn(session) && userRequestIsValid(session, request)) {
             chain.doFilter(request, response);
-        } else {
+        }else if(tryAuthoriseUser(session, request)&& userRequestIsValid(session, request)){
+            chain.doFilter(request, response);
+        }
+        else {
             RequestDispatcher rd = request.getRequestDispatcher(LOGIN_PAGE);
             rd.forward(request, response);
         }
     }
 
     private boolean tryAuthoriseUser(HttpSession session, HttpServletRequest request) {
-        Object daoObject = getServletContext().getAttribute("userDao");
-        UserDao userDao = (UserDao) (daoObject);
         String user = request.getParameter("user");
         String pass = request.getParameter("password");
         if (user != null && pass != null) {
@@ -59,7 +70,7 @@ public class AuthFilter extends HttpFilter {
                     session.setAttribute("login_error", "Authorization error");
                     return false;
                 }
-                session.setAttribute("user", loadedUser);
+                session.setAttribute("user", loadedUser.get());
                 return true;
             } catch (Exception e) {
                 session.setAttribute("login_error", "Server error during logging in. Please try again");
@@ -78,7 +89,12 @@ public class AuthFilter extends HttpFilter {
 
     private boolean userRequestIsValid(HttpSession session, HttpServletRequest request){
 
-        return true;
+        Optional<User> sessionUser=Optional.ofNullable((User) session.getAttribute("user"));
+        if(sessionUser.isPresent()){
+            return rolesInspector.isUserRequestAccessed(sessionUser.get(),request.getRequestURI());
+        }
+
+        return false;
     }
 
 
