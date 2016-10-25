@@ -22,11 +22,11 @@ public class BookLibraryTest {
     @Test
     public void testLibraryFunctionality() throws IOException, SQLException, InterruptedException {
         BookLibrary library=createTestBookLibrary();
-        assertThat(library.getAllBooks().size(),is(8));
+        assertThat(library.getAllBooks().size(),is(9));
 
         library.addBook(new Book("War and Peace","Tolstoy Leo",2001,"very very big book"));
 
-        assertThat(library.getAllBooks().size(),is(9));
+        assertThat(library.getAllBooks().size(),is(10));
 
         assertThat(library.getBooksByAuthor("Tolstoy Leo").get(0).getAuthorName(),is("Tolstoy Leo"));
         assertThat(library.getBooksByAuthor("Tolstoy Leo").size(),is(1));
@@ -37,6 +37,9 @@ public class BookLibraryTest {
 
         assertThat(library.getBooksByPublishingYear(2001).get(0).getPublicationYear(),is(2001));
         assertThat(library.getBooksByPublishingYear(2001).size(),is(1));
+
+
+        logger.debug(library.getBooksByAuthor("Joshua Bloch"));
     }
 
     private BookLibrary createTestBookLibrary() throws IOException, InterruptedException, SQLException {

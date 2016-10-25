@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<roles>
+    <role id="admin">
+            <page>
+                <regex>
+                    .*
+                </regex>
+            </page>
+    </role>
+
+    <role id="user">
+        <page>
+            <regex>
+                ^\/guestPage.html
+            </regex>
+            <regex>
+                ^\/userPage.html
+            </regex>
+        </page>
+    </role>
+
+    <role id="guest">
+        <page>
+            <regex>
+                ^\/guestPage.html
+            </regex>
+        </page>
+    </role>
+</roles>

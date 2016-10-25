@@ -113,14 +113,14 @@ public class Food {
         },
         DESCRIPTION {
             @Override
-            void handle(FoodBuilder builder, String price) {
-                builder.setName(price);
+            void handle(FoodBuilder builder, String description) {
+                builder.setDescription(description);
             }
         },
         CALORIES {
             @Override
-            void handle(FoodBuilder builder, String price) {
-                builder.setName(price);
+            void handle(FoodBuilder builder, String calories) {
+                builder.setCalories(Integer.parseInt(calories));
             }
         },
         EMPTY{

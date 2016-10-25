@@ -5,5 +5,5 @@ include 'core',
         'homeworks',
          'oop',
         'strings'
-
+include 'web'
 

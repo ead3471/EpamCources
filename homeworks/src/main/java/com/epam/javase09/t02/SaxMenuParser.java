@@ -22,6 +22,9 @@ public class SaxMenuParser {
         MenuHandler menuHandler=new MenuHandler();
         reader.setContentHandler(menuHandler);
         reader.parse(new InputSource(filePath));
+        //reader.setFeature("http://xml.org/sax/features/string-interning",true);
+        //reader.setFeature("http://xml.org/sax/features/string-interning",true);
+        logger.debug(menuHandler.loadedFood);
         return menuHandler.loadedFood;
     }
 
@@ -56,7 +59,7 @@ public class SaxMenuParser {
             }
             //logger.debug(qName+"="+textBuilder.toString());
             Food.FOOD_PARAMETER parameter=Food.FOOD_PARAMETER.getFromString(qName);
-            parameter.handle(foodBuilder,textBuilder.toString());
+            parameter.handle(foodBuilder,textBuilder.toString().replace("\n"," ").trim());
 
         }
     }
