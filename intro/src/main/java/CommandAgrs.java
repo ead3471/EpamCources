@@ -44,7 +44,11 @@ public class CommandAgrs  {
         ByteArrayOutputStream b=new ByteArrayOutputStream();
         Double dd=new Double(15);
 
-        System.out.println(System.in.read());
+
+            Object ob=null;
+
+            Optional<String> test=Optional.ofNullable((String)ob);
+            System.out.println(test.orElse("bbbbb"));
 
 
 
