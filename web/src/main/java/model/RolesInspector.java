@@ -34,8 +34,8 @@ public class RolesInspector {
         Map<String,List<String>> rules=new HashMap<>();
 
         rules.put("admin", Arrays.asList(".*"));
-        rules.put("user",Arrays.asList("\\/userpages\\/userpage.html"));
-        rules.put("guest",Arrays.asList("\\/userpages\\/guestpage.html"));
+        rules.put("user",Arrays.asList("\\/userpages\\/userpage.html","","\\/"));
+        rules.put("guest",Arrays.asList("\\/userpages\\/guestpage.html","","\\/"));
 
         return new RolesInspector(rules);
 

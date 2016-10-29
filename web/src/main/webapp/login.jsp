@@ -6,8 +6,9 @@
 </head>
 <body>
 
-<form action=<%=session.getAttribute("userAfterLoginUrl")%> method="post">
-
+<form action="<%=(String)request.getAttribute("userAfterLoginUrl")%>" method="post">
+<%  if(session.getAttribute("login_msg")!=null)
+            out.write((String)session.getAttribute("login_msg"));%>
     <table >
         <tr><th>Login please</th><tr>
         <tr>

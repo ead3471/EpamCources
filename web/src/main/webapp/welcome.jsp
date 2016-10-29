@@ -6,6 +6,6 @@
 </head>
 <body>
 WELCOME<br/>
-user <%=session.getAttribute("user")%>
+
 </body>
 </html>

@@ -18,21 +18,7 @@ import java.io.IOException;
 public class AuthController extends HttpServlet {
 private final Logger logger= LogManager.getLogger(AuthController.class);
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-       logger.debug(req.getParameter("user"));
-
-        if("root".equals(req.getParameter("user"))){
-            HttpSession session=req.getSession();
-            session.setAttribute("user",req.getParameter("user"));
-            RequestDispatcher rd=req.getRequestDispatcher("/welcome.jsp");
-            rd.forward(req,resp);
-        }
-        else{
-            RequestDispatcher rd=req.getRequestDispatcher("/login.html");
-            rd.forward(req,resp);
-        }
-
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
     }
 }
