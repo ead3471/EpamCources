@@ -14,5 +14,6 @@
 <br>
 <fmt:message key="admin.hello" /> ${sessionScope.user.userName}
 <jsp:include page="/logout.jsp"/>
+<a href="/catalog/">Просмотреть каталог оборудования</a>
 </body>
 </html>

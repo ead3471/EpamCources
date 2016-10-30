@@ -33,7 +33,6 @@ public class UserDao {
            Statement st= con.createStatement();
             ResultSet resultSet=st.executeQuery(getUserByNameSql+userName+"'")){
            if(resultSet.next()&& resultSet.getString("password").equals(validationString)){
-                logger.debug("loaded pass:"+resultSet.getString("password"));
                return  Optional.of(new User(userName,validationString,resultSet.getString("role")));
            }
 

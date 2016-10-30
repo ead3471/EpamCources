@@ -1,20 +1,4 @@
 DROP ALL OBJECTS;
-CREATE TABLE   Users (id   INT     NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                    name VARCHAR(100) NOT NULL,
-                    password  VARCHAR(20) NOT NULL,
-                    role VARCHAR(10),
-                    UNIQUE (name));
-
-//Users Table
-INSERT INTO Users (name, password,role) VALUES ('admin', '12345','admin');
-INSERT INTO Users (name, password,role) VALUES ('user1', '1234','user');
-INSERT INTO Users (name, password,role) VALUES ('user2', '1234','user');
-INSERT INTO Users (name, password,role) VALUES ('user3', '123','user');
-INSERT INTO Users (name, password,role) VALUES ('user4', '12345','user');
-INSERT INTO Users (name, password,role) VALUES ('user5', '1235','guest');
-//
-
-
 CREATE TABLE   DEVICES (id   INT     NOT NULL AUTO_INCREMENT PRIMARY KEY,
                     name VARCHAR(100) NOT NULL,
                     serial  VARCHAR(20) NOT NULL,
@@ -34,3 +18,4 @@ INSERT INTO DEVICES (name, serial,mount_place,last_verification,next_verificatio
 INSERT INTO DEVICES (name, serial,mount_place,last_verification,next_verification) VALUES ('DEVICE_TYPE_3', '7','PLACE_5','2011-01-01','2016-08-15');
 INSERT INTO DEVICES (name, serial,mount_place,last_verification,next_verification) VALUES ('DEVICE_TYPE_3', '8','PLACE_3','2015-01-01','2018-03-15');
 INSERT INTO DEVICES (name, serial,mount_place,last_verification,next_verification) VALUES ('DEVICE_TYPE_3', '9','PLACE_2','2009-01-01','2016-09-15');
+//

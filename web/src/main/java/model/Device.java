@@ -2,6 +2,7 @@ package model;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.Period;
 
 public class Device {
    private final String name;
@@ -9,20 +10,15 @@ public class Device {
    private String passportImgUrl;
    private LocalDate dateOfNextVerification;
    private LocalDate dateOfLastVerification;
-   private Duration betweenVerificationTime;
    private String mountPlace;
 
-   public Device(String name, String serialNumber) {
-      this.name = name;
-      this.serialNumber = serialNumber;
-   }
 
-   public Device(String name, String serialNumber, LocalDate dateOfNextVerification, LocalDate dateOfLastVerification, Duration betweenVerificationTime) {
+   public Device(String name, String serialNumber, LocalDate dateOfNextVerification, LocalDate dateOfLastVerification, String mountPlace) {
       this.name = name;
       this.serialNumber = serialNumber;
       this.dateOfNextVerification = dateOfNextVerification;
       this.dateOfLastVerification = dateOfLastVerification;
-      this.betweenVerificationTime = betweenVerificationTime;
+      this.mountPlace=mountPlace;
    }
 
    public String getName() {
@@ -45,10 +41,6 @@ public class Device {
       return dateOfLastVerification;
    }
 
-   public Duration getBetweenVerificationTime() {
-      return betweenVerificationTime;
-   }
-
    public String getMountPlace() {
       return mountPlace;
    }
@@ -65,11 +57,39 @@ public class Device {
       this.dateOfLastVerification = dateOfLastVerification;
    }
 
-   public void setBetweenVerificationTime(Duration betweenVerificationTime) {
-      this.betweenVerificationTime = betweenVerificationTime;
-   }
-
    public void setMountPlace(String mountPlace) {
       this.mountPlace = mountPlace;
+   }
+
+   @Override
+   public String toString() {
+      return "Device{" +
+              "name='" + name + '\'' +
+              ", serialNumber='" + serialNumber + '\'' +
+              ", passportImgUrl='" + passportImgUrl + '\'' +
+              ", dateOfNextVerification=" + dateOfNextVerification +
+              ", dateOfLastVerification=" + dateOfLastVerification +
+              ", mountPlace='" + mountPlace + '\'' +
+              '}';
+   }
+
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+
+      Device device = (Device) o;
+
+      if (!getName().equals(device.getName())) return false;
+      return getSerialNumber().equals(device.getSerialNumber());
+
+   }
+
+   @Override
+   public int hashCode() {
+      int result = getName().hashCode();
+      result = 31 * result + getSerialNumber().hashCode();
+      return result;
    }
 }

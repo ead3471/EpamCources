@@ -1,5 +1,6 @@
 package controller.listeners;
 
+import dao.DeviceDao;
 import dao.UserDao;
 import model.RolesInspector;
 import org.apache.logging.log4j.LogManager;
@@ -30,6 +31,7 @@ public class ServerSetupLoader implements ServletContextListener {
     private final String DB_INIT_SCRIPT_KEY="initBaseFromFileScript";
 
     private final String USER_DAO_KEY="userDao";
+    private final String DEVICE_DAO_KEY="deviceDao";
     private final String ROLES_INSPECTOR_KEY="rolesInspector";
 
 
@@ -49,6 +51,10 @@ public class ServerSetupLoader implements ServletContextListener {
     private void initDAO(ConnectionPool connectionPool, ServletContext servletContext){
         UserDao userDao=new UserDao(connectionPool);
         servletContext.setAttribute(USER_DAO_KEY,userDao);
+
+        DeviceDao deviceDao=new DeviceDao(connectionPool);
+        servletContext.setAttribute(DEVICE_DAO_KEY,deviceDao);
+
     }
 
     private ConnectionPool initConnectionPool(ServletContext servletContext) throws IOException, SQLException {

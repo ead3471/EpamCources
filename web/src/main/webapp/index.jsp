@@ -25,6 +25,18 @@
        </td>
    </tr>
     <tr>
+    <td>
+        <jsp:include page="/login.jsp"/>
+    </td>
+
+    <tr>
+    <tr>
+        <td>
+            <a href="/catalog/"><fmt:message key="index.catalogPageLabel"/></a>
+        </td>
+    </tr>
+
+    <tr>
         <td>
             <a href="/userpages/adminpage.jsp"><fmt:message key="index.adminPageLabel" /></a>
         </td>
