@@ -11,11 +11,12 @@ import java.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class DeviceDao {
     private final ConnectionPool connectionPool;
     private final Logger logger= LogManager.getLogger(UserDao.class);
-    private final String GET_ALL_DEVICES_SQL ="SELECT name,serial,mount_place,last_verification,next_verification,passport_url FROM DEVICES";
+
 
 
     public DeviceDao(ConnectionPool connectionPool) {
@@ -49,8 +50,19 @@ public class DeviceDao {
         return getDevicesBySql(filter.build());
     }
 
+
     public List<Device> getAll(){
-        return getDevicesBySql(GET_ALL_DEVICES_SQL);
+        return getDevicesBySql(filter().build());
+    }
+
+    public Optional<Device> getDeviceBySerial(String serial){
+        List<Device> resultList=getDevicesByFilter(filter().withSerial("serial"));
+
+        if(resultList.size()>0){
+            return Optional.of(resultList.get(0));
+        }
+        return Optional.empty();
+
     }
 
     public boolean insertDevice(Device device){
@@ -73,9 +85,7 @@ public class DeviceDao {
         }
     }
 
-
-
-    public boolean updateDevice(Device device){
+    public void updateDevice(Device device) throws DAOException{
         StringBuilder sqlStringBuder=new StringBuilder("UPDATE DEVICES SET mount_place='")
                 .append(device.getMountPlace()).append("',")
                 .append("last_verification='").append(device.getDateOfLastVerification()).append("',")
@@ -86,14 +96,26 @@ public class DeviceDao {
         try(Connection con=connectionPool.takeConnection();
                Statement st=con.createStatement() ){
                 st.executeUpdate(sqlStringBuder.toString());
-            return true;
+
         }
-        catch(SQLException|InterruptedException ex){
-            logger.warn("Error update device",ex);
-            return false;
+        catch (InterruptedException|SQLException ex){
+            throw new DAOException(ex);
         }
     }
 
+    public boolean deleteDevice(String serial) throws DAOException {
+        try(Connection con=connectionPool.takeConnection();
+            Statement st=con.createStatement();
+        ){
+            st.executeUpdate("DELETE FROM TABLE WHERE serial="+serial);
+            return true;
+        }
+        catch(InterruptedException|SQLException ex){
+            throw new DAOException(ex);
+        }
+
+
+    }
 
 
 

@@ -12,6 +12,11 @@ public class Device {
    private LocalDate dateOfLastVerification;
    private String mountPlace;
 
+    public Device(String name,String serial){
+        this(name,serial,null,null,null);
+    }
+
+
 
    public Device(String name, String serialNumber, LocalDate dateOfNextVerification, LocalDate dateOfLastVerification, String mountPlace) {
       this.name = name;
