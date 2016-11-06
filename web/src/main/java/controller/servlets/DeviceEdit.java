@@ -5,7 +5,6 @@ import dao.DeviceDao;
 import model.Device;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,10 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @WebServlet("/userpages/edit/device/")
@@ -47,20 +43,22 @@ public class DeviceEdit extends HttpServlet {
 
 
     private Action createActionForRequest(HttpServletRequest request) {
-        String action = Optional.ofNullable(request.getParameter("action")).orElse("unknown");
-        switch (action) {
-            case "update":
-                return new UpdateAction();
-            case "delete":
-                return new DeleteAction();
-            case "insert":
-                return new InsertAction();
-            default:
-                return new EmptyAction();
-        }
 
+        if(Optional.ofNullable(request.getParameter("update")).isPresent()){
+            return new UpdateAction();
+        };
 
+        if(Optional.ofNullable(request.getParameter("delete")).isPresent()){
+            return new DeleteAction();
+        };
+
+        if(Optional.ofNullable(request.getParameter("insert")).isPresent()){
+            return new InsertAction();
+        };
+
+        return new EmptyAction();
     }
+
     interface Action{
         void doAction(HttpServletRequest request,HttpServletResponse responce) throws DAOException;
     }
@@ -76,13 +74,12 @@ public class DeviceEdit extends HttpServlet {
         @Override
         public void doAction(HttpServletRequest request, HttpServletResponse responce) throws DAOException {
             //TODO Do something if device not found?????
-            Optional.ofNullable(request.getParameter("serial")).ifPresent(serial -> {
-                try {
-                    deviceDao.deleteDevice(serial);
-                } catch (DAOException e) {
-                    e.printStackTrace();
-                }
-            });
+            String serial=request.getParameter("serial");
+            if(serial!=null){
+                deviceDao.deleteDevice(serial);
+            }
+
+
         }
     }
 
@@ -97,6 +94,9 @@ public class DeviceEdit extends HttpServlet {
                 Optional.ofNullable(request.getParameter("lastVerificationDate")).ifPresent(lastVerification->deviceForEdit.setDateOfLastVerification(LocalDate.parse(lastVerification)));
                 Optional.ofNullable(request.getParameter("nextVerificationDate")).ifPresent(nextVerification->deviceForEdit.setDateOfNextVerification(LocalDate.parse(nextVerification)));;
                 deviceDao.updateDevice(deviceForEdit);
+            }
+            else{
+                logger.info("Device for edit not presented:"+ request.getParameter("serial"));
             }
         }
     }

@@ -7,8 +7,7 @@ package pool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -67,8 +66,8 @@ public class ConnectionPool implements AutoCloseable {
 
         }
     }
-     public static void executeSQLFromFile(String fileWithSql, Connection connection) throws FileNotFoundException, SQLException {
-        try(Scanner fileScanner=new Scanner(new File(fileWithSql));
+     public static void executeSQLFromFile(String fileWithSql, Connection connection) throws FileNotFoundException, SQLException, UnsupportedEncodingException {
+        try(Scanner fileScanner=new Scanner(new InputStreamReader(new FileInputStream(fileWithSql), "UTF8"));
             Statement st=connection.createStatement()){
             fileScanner.useDelimiter(";");
             while (fileScanner.hasNext())

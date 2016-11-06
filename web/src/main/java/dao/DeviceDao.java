@@ -56,7 +56,7 @@ public class DeviceDao {
     }
 
     public Optional<Device> getDeviceBySerial(String serial){
-        List<Device> resultList=getDevicesByFilter(filter().withSerial("serial"));
+        List<Device> resultList=getDevicesByFilter(filter().withSerial(serial));
 
         if(resultList.size()>0){
             return Optional.of(resultList.get(0));
@@ -107,14 +107,12 @@ public class DeviceDao {
         try(Connection con=connectionPool.takeConnection();
             Statement st=con.createStatement();
         ){
-            st.executeUpdate("DELETE FROM TABLE WHERE serial="+serial);
+            st.executeUpdate("DELETE FROM DEVICES WHERE serial="+serial);
             return true;
         }
         catch(InterruptedException|SQLException ex){
             throw new DAOException(ex);
         }
-
-
     }
 
 
@@ -130,6 +128,10 @@ public class DeviceDao {
         private  StringBuilder resultSqlBuilder= new StringBuilder("SELECT name,serial,mount_place,last_verification,next_verification,passport_url FROM DEVICES");
 
         ArrayList<String> filterConditions=new ArrayList();
+
+        ArrayList<String> postConditions=new ArrayList<>();
+        private String limitCondition="";
+
         private void addCondition(String sql){
             filterConditions.add(sql);
         }
@@ -159,20 +161,46 @@ public class DeviceDao {
             return this;
         }
 
+        public DeviceFilter withColumnBetween(String columnName, String startValue,String endValue){
+            addCondition("id BETWEEN "+startValue+" AND "+endValue);
+            return this;
+        }
 
+        public DeviceFilter withColumnGreaterThen(String columnName, String minValue){
+            addCondition(columnName+">"+minValue);
+            return this;
+        }
+
+        public DeviceFilter withColumnLessThen(String columnName, String maxValue){
+            addCondition(columnName+"<"+maxValue);
+            return this;
+        }
+
+        public DeviceFilter withLimit(int limit){
+            postConditions.add(" LIMIT "+limit);
+            return this;
+        }
+
+        public DeviceFilter orderBy(String columnName,String orderDirection){
+            postConditions.add(" ORDER BY "+columnName+" "+Optional.ofNullable(orderDirection).filter(val->val.matches("^(ASC|DESC)$")).orElse(""));
+            return this;
+        }
 
         private String build(){
-            if(filterConditions.size()==0)
-                    return resultSqlBuilder.toString();
-            else{
+            if(filterConditions.size()>0)
               resultSqlBuilder.append(" WHERE ").append(filterConditions.get(0));
-              int i=1;
-              while(i<filterConditions.size()){
-                  resultSqlBuilder.append(" AND ").append(filterConditions.get(i));
-                  i++;
+
+              for(String condition:filterConditions){
+                  resultSqlBuilder.append(" AND ").append(condition);
               }
-                return resultSqlBuilder.toString();
+
+            for(String condition:postConditions){
+                resultSqlBuilder.append(condition);
             }
-        }
+
+
+                return resultSqlBuilder.toString()+limitCondition;
+            }
+
     }
 }

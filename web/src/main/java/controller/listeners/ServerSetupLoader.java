@@ -67,7 +67,7 @@ public class ServerSetupLoader implements ServletContextListener {
         }
     }
 
-    private void initBase(ServletContext servletContext,ConnectionPool connectionPool) throws InterruptedException, FileNotFoundException, SQLException {
+    private void initBase(ServletContext servletContext,ConnectionPool connectionPool) throws Exception {
         String initBaseFile=servletContext.getInitParameter(DB_INIT_SCRIPT_KEY);
         if(initBaseFile!=null){
             try(Connection con=connectionPool.takeConnection()){

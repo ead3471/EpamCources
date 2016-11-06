@@ -1,19 +1,17 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Freemind
-  Date: 2016-10-31
-  Time: 2:10
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" />
+<fmt:setLocale value="${language}" />
+<fmt:setBundle basename="dialogs" />
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title><fmt:message key="device.editOk.title"/></title>
 </head>
 <body>
 
-<h1>Update success!!!</h1>
-<a href="/catalog/">Return to catalog</a>
+<h1><fmt:message key="device.editOk.message"/></h1>
+<a href="/catalog/"><fmt:message key="device.edit.back"/></a>
 
 </body>
 </html>

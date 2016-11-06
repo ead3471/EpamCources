@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by Freemind on 2016-10-30.
@@ -51,42 +52,16 @@ public class Catalog extends HttpServlet{
 
     private DeviceDao.DeviceFilter createFilterFromRequest(HttpServletRequest req) {
         DeviceDao.DeviceFilter filter = deviceDao.filter();
-        Map<String,String[]> requestParameters=req.getParameterMap();
+        Optional.ofNullable(req.getParameter("serial")).filter(value->value.length()>0).ifPresent(serial->filter.withSerial(serial));
+        Optional.ofNullable(req.getParameter("mountPlace")).filter(value->value.length()>0).ifPresent(mountPlace->filter.withMountPlace(mountPlace));
+        Optional.ofNullable(req.getParameter("name")).filter(value->value.length()>0).ifPresent(name->filter.withName(name));
+        Optional.ofNullable(req.getParameter("nextVerificationAfter")).filter(value->value.length()>0).ifPresent(nextVerificationAfter->filter.withNextVerificationDateAfter(LocalDate.parse(nextVerificationAfter)));
+        Optional.ofNullable(req.getParameter("nextVerificationBefore")).filter(value->value.length()>0).ifPresent(nextVerificationBefore->filter.withNextVerificationDateBefore(LocalDate.parse(nextVerificationBefore)));
+        Optional.ofNullable(req.getParameter("startColumn")).filter(value->value.length()>0).ifPresent(column->filter.withColumnGreaterThen(column,req.getParameter("minValue")));
+        Optional.ofNullable(req.getParameter("endColumn")).filter(value->value.length()>0).ifPresent(column->filter.withColumnLessThen(column,req.getParameter("maxValue")));
+        Optional.ofNullable(req.getParameter("limit")).filter(value->value.length()>0).map(val->filter.withLimit(Integer.parseInt(val))).orElse(filter.withLimit(10));
+        Optional.ofNullable(req.getParameter("orderBy")).filter(value->value.length()>0).ifPresent(order->filter.orderBy(order,req.getParameter("orderDirection")));
 
-        if(!requestParameters.isEmpty()) {
-
-            if (requestParameters.containsKey("serial")) {
-                String parameterValue=requestParameters.get("serial")[0];
-                if(parameterValue.length()>0)
-                    filter.withSerial(parameterValue);
-            }
-            if (requestParameters.containsKey("mountPlace")) {
-                String parameterValue=requestParameters.get("mountPlace")[0];
-                if(parameterValue.length()>0)
-                    filter.withMountPlace(parameterValue);
-            }
-            if (requestParameters.containsKey("nextVerificationAfter")) {
-                String parameterValue=requestParameters.get("nextVerificationAfter")[0];
-                if(parameterValue.length()>0)
-                    filter.withNextVerificationDateAfter(LocalDate.parse(parameterValue));
-            }
-
-            if (requestParameters.containsKey("nextVerificationBefore")) {
-                String parameterValue=requestParameters.get("nextVerificationBefore")[0];
-                if(parameterValue.length()>0)
-                filter.withNextVerificationDateBefore(LocalDate.parse(parameterValue));
-            }
-
-            if (requestParameters.containsKey("name")) {
-                String parameterValue=requestParameters.get("name")[0];
-                if(parameterValue.length()>0)
-                    filter.withName(requestParameters.get("name")[0]);
-            }
-        }
         return filter;
-
-
-
-
     }
 }
